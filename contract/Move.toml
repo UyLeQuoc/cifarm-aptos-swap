@@ -1,10 +1,11 @@
 [package]
-name = "MessageBoard"
+name = "CifarmSwap"
 version = "1.0.0"
 authors = []
 
 [addresses]
 message_board_addr = "_"
+test_coin = "0x16"
 
 [dependencies]
 AptosFramework = { git = "https://github.com/aptos-labs/aptos-framework.git", rev = "mainnet", subdir = "aptos-framework" }
