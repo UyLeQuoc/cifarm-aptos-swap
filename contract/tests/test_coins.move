@@ -4,7 +4,7 @@ module test_coin::test_coins {
     use aptos_framework::managed_coin;
     use std::signer;
 
-    struct TestCAKE {}
+    struct TestCIFARM {}
     struct TestBUSD {}
     struct TestUSDC {}
     struct TestBNB {}
@@ -14,10 +14,10 @@ module test_coin::test_coins {
         let account = account::create_account_for_test(@test_coin);
 
         // init coins
-        managed_coin::initialize<TestCAKE>(
+        managed_coin::initialize<TestCIFARM>(
             &account,
-            b"Cake",
-            b"CAKE",
+            b"Cifarm",
+            b"CIFARM",
             9,
             false,
         );

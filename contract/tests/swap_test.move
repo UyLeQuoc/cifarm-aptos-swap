@@ -1,7 +1,7 @@
 #[test_only]
 module cifarm::swap_test {
     use std::signer;
-    use test_coin::test_coins::{Self, TestCAKE, TestBUSD, TestUSDC, TestBNB, TestAPT};
+    use test_coin::test_coins::{Self, TestCIFARM, TestBUSD, TestUSDC, TestBNB, TestAPT};
     use aptos_framework::account;
     use aptos_framework::coin;
     use aptos_framework::genesis;
@@ -47,9 +47,9 @@ module cifarm::swap_test {
 
         let coin_owner = test_coins::init_coins();
 
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, bob, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, bob, 100 * pow(10, 8));
         test_coins::register_and_mint<TestBUSD>(&coin_owner, bob, 100 * pow(10, 8));
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, alice, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, alice, 100 * pow(10, 8));
         test_coins::register_and_mint<TestBUSD>(&coin_owner, alice, 100 * pow(10, 8));
 
         let bob_liquidity_x = 5 * pow(10, 8);
@@ -58,14 +58,14 @@ module cifarm::swap_test {
         let alice_liquidity_y = 4 * pow(10, 8);
 
         // bob provider liquidity for 5:10 CAKE-BUSD
-        router::add_liquidity<TestCAKE, TestBUSD>(bob, bob_liquidity_x, bob_liquidity_y, 0, 0);
-        router::add_liquidity<TestCAKE, TestBUSD>(alice, alice_liquidity_x, alice_liquidity_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(bob, bob_liquidity_x, bob_liquidity_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(alice, alice_liquidity_x, alice_liquidity_y, 0, 0);
 
-        let (balance_y, balance_x) = swap::token_balances<TestBUSD, TestCAKE>();
-        let (reserve_y, reserve_x, _) = swap::token_reserves<TestBUSD, TestCAKE>();
-        let resource_account_lp_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(resource_account));
-        let bob_lp_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(bob));
-        let alice_lp_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(alice));
+        let (balance_y, balance_x) = swap::token_balances<TestBUSD, TestCIFARM>();
+        let (reserve_y, reserve_x, _) = swap::token_reserves<TestBUSD, TestCIFARM>();
+        let resource_account_lp_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(resource_account));
+        let bob_lp_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(bob));
+        let alice_lp_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(alice));
 
         let resource_account_suppose_lp_balance = MINIMUM_LIQUIDITY;
         let bob_suppose_lp_balance = math::sqrt(((bob_liquidity_x as u128) * (bob_liquidity_y as u128))) - MINIMUM_LIQUIDITY;
@@ -99,29 +99,29 @@ module cifarm::swap_test {
 
         let coin_owner = test_coins::init_coins();
 
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, bob, 200 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, bob, 200 * pow(10, 8));
         test_coins::register_and_mint<TestBUSD>(&coin_owner, bob, 200 * pow(10, 8));
 
         let bob_liquidity_x = 5 * pow(10, 8);
         let bob_liquidity_y = 10 * pow(10, 8);
 
         // bob provider liquidity for 5:10 CAKE-BUSD
-        router::add_liquidity<TestCAKE, TestBUSD>(bob, bob_liquidity_x, bob_liquidity_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(bob, bob_liquidity_x, bob_liquidity_y, 0, 0);
 
-        let bob_token_x_before_balance = coin::balance<TestCAKE>(signer::address_of(bob));
+        let bob_token_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(bob));
         let bob_token_y_before_balance = coin::balance<TestBUSD>(signer::address_of(bob));
 
         let bob_add_liquidity_x = 1 * pow(10, 8);
         let bob_add_liquidity_y = 5 * pow(10, 8);
-        router::add_liquidity<TestCAKE, TestBUSD>(bob, bob_add_liquidity_x, bob_add_liquidity_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(bob, bob_add_liquidity_x, bob_add_liquidity_y, 0, 0);
 
         let bob_added_liquidity_x = bob_add_liquidity_x;
         let bob_added_liquidity_y = (bob_add_liquidity_x as u128) * (bob_liquidity_y as u128) / (bob_liquidity_x as u128);
 
-        let bob_token_x_after_balance = coin::balance<TestCAKE>(signer::address_of(bob));
+        let bob_token_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(bob));
         let bob_token_y_after_balance = coin::balance<TestBUSD>(signer::address_of(bob));
-        let bob_lp_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(bob));
-        let resource_account_lp_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(resource_account));
+        let bob_lp_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(bob));
+        let resource_account_lp_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(resource_account));
 
         let resource_account_suppose_lp_balance = MINIMUM_LIQUIDITY;
         let bob_suppose_lp_balance = math::sqrt(((bob_liquidity_x as u128) * (bob_liquidity_y as u128))) - MINIMUM_LIQUIDITY;
@@ -152,18 +152,18 @@ module cifarm::swap_test {
 
         let coin_owner = test_coins::init_coins();
 
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, bob, 200 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, bob, 200 * pow(10, 8));
         test_coins::register_and_mint<TestBUSD>(&coin_owner, bob, 200 * pow(10, 8));
 
         let initial_reserve_x = 5 * pow(10, 8);
         let initial_reserve_y = 10 * pow(10, 8);
 
         // bob provider liquidity for 5:10 CAKE-BUSD
-        router::add_liquidity<TestCAKE, TestBUSD>(bob, initial_reserve_x, initial_reserve_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(bob, initial_reserve_x, initial_reserve_y, 0, 0);
 
         let bob_add_liquidity_x = 1 * pow(10, 8);
         let bob_add_liquidity_y = 5 * pow(10, 8);
-        router::add_liquidity<TestCAKE, TestBUSD>(bob, bob_add_liquidity_x, bob_add_liquidity_y, 0, 4 * pow(10, 8));
+        router::add_liquidity<TestCIFARM, TestBUSD>(bob, bob_add_liquidity_x, bob_add_liquidity_y, 0, 4 * pow(10, 8));
     }
 
     #[test(dev = @dev, admin = @default_admin, resource_account = @cifarm, treasury = @0x23456, bob = @0x12345, alice = @0x12346, aptos_framework = @0x1)]
@@ -183,29 +183,29 @@ module cifarm::swap_test {
 
         let coin_owner = test_coins::init_coins();
 
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, bob, 200 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, bob, 200 * pow(10, 8));
         test_coins::register_and_mint<TestBUSD>(&coin_owner, bob, 200 * pow(10, 8));
 
         let bob_liquidity_x = 5 * pow(10, 8);
         let bob_liquidity_y = 10 * pow(10, 8);
 
         // bob provider liquidity for 5:10 CAKE-BUSD
-        router::add_liquidity<TestCAKE, TestBUSD>(bob, bob_liquidity_x, bob_liquidity_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(bob, bob_liquidity_x, bob_liquidity_y, 0, 0);
 
-        let bob_token_x_before_balance = coin::balance<TestCAKE>(signer::address_of(bob));
+        let bob_token_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(bob));
         let bob_token_y_before_balance = coin::balance<TestBUSD>(signer::address_of(bob));
 
         let bob_add_liquidity_x = 5 * pow(10, 8);
         let bob_add_liquidity_y = 4 * pow(10, 8);
-        router::add_liquidity<TestCAKE, TestBUSD>(bob, bob_add_liquidity_x, bob_add_liquidity_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(bob, bob_add_liquidity_x, bob_add_liquidity_y, 0, 0);
 
         let bob_added_liquidity_x = (bob_add_liquidity_y as u128) * (bob_liquidity_x as u128) / (bob_liquidity_y as u128);
         let bob_added_liquidity_y = bob_add_liquidity_y;
 
-        let bob_token_x_after_balance = coin::balance<TestCAKE>(signer::address_of(bob));
+        let bob_token_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(bob));
         let bob_token_y_after_balance = coin::balance<TestBUSD>(signer::address_of(bob));
-        let bob_lp_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(bob));
-        let resource_account_lp_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(resource_account));
+        let bob_lp_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(bob));
+        let resource_account_lp_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(resource_account));
 
         let resource_account_suppose_lp_balance = MINIMUM_LIQUIDITY;
         let bob_suppose_lp_balance = math::sqrt(((bob_liquidity_x as u128) * (bob_liquidity_y as u128))) - MINIMUM_LIQUIDITY;
@@ -237,18 +237,18 @@ module cifarm::swap_test {
 
         let coin_owner = test_coins::init_coins();
 
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, bob, 200 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, bob, 200 * pow(10, 8));
         test_coins::register_and_mint<TestBUSD>(&coin_owner, bob, 200 * pow(10, 8));
 
         let initial_reserve_x = 5 * pow(10, 8);
         let initial_reserve_y = 10 * pow(10, 8);
 
         // bob provider liquidity for 5:10 CAKE-BUSD
-        router::add_liquidity<TestCAKE, TestBUSD>(bob, initial_reserve_x, initial_reserve_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(bob, initial_reserve_x, initial_reserve_y, 0, 0);
 
         let bob_add_liquidity_x = 5 * pow(10, 8);
         let bob_add_liquidity_y = 4 * pow(10, 8);
-        router::add_liquidity<TestCAKE, TestBUSD>(bob, bob_add_liquidity_x, bob_add_liquidity_y, 5 * pow(10, 8), 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(bob, bob_add_liquidity_x, bob_add_liquidity_y, 5 * pow(10, 8), 0);
     }
 
     #[test(dev = @dev, admin = @default_admin, resource_account = @cifarm, treasury = @0x23456, bob = @0x12341, alice = @0x12342, aptos_framework = @0x1)]
@@ -267,8 +267,8 @@ module cifarm::swap_test {
 
         let coin_owner = test_coins::init_coins();
 
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, bob, 100 * pow(10, 8));
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, alice, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, bob, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, alice, 100 * pow(10, 8));
 
         test_coins::register_and_mint<TestBUSD>(&coin_owner, bob, 100 * pow(10, 8));
         test_coins::register_and_mint<TestBUSD>(&coin_owner, alice, 100 * pow(10, 8));
@@ -280,8 +280,8 @@ module cifarm::swap_test {
         let alice_add_liquidity_y = 4 * pow(10, 8);
 
         // bob provider liquidity for 5:10 CAKE-BUSD
-        router::add_liquidity<TestCAKE, TestBUSD>(bob, bob_add_liquidity_x, bob_add_liquidity_y, 0, 0);
-        router::add_liquidity<TestCAKE, TestBUSD>(alice, alice_add_liquidity_x, alice_add_liquidity_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(bob, bob_add_liquidity_x, bob_add_liquidity_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(alice, alice_add_liquidity_x, alice_add_liquidity_y, 0, 0);
 
         let bob_suppose_lp_balance = math::sqrt(((bob_add_liquidity_x as u128) * (bob_add_liquidity_y as u128))) - MINIMUM_LIQUIDITY;
         let suppose_total_supply = bob_suppose_lp_balance + MINIMUM_LIQUIDITY;
@@ -290,40 +290,40 @@ module cifarm::swap_test {
         let suppose_reserve_x = bob_add_liquidity_x + alice_add_liquidity_x;
         let suppose_reserve_y = bob_add_liquidity_y + alice_add_liquidity_y;
 
-        let bob_lp_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(bob));
-        let alice_lp_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(alice));
+        let bob_lp_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(bob));
+        let alice_lp_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(alice));
 
         assert!((bob_suppose_lp_balance as u64) == bob_lp_balance, 99);
         assert!((alice_suppose_lp_balance as u64) == alice_lp_balance, 98);
 
-        let alice_token_x_before_balance = coin::balance<TestCAKE>(signer::address_of(alice));
+        let alice_token_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(alice));
         let alice_token_y_before_balance = coin::balance<TestBUSD>(signer::address_of(alice));
-        let bob_token_x_before_balance = coin::balance<TestCAKE>(signer::address_of(bob));
+        let bob_token_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(bob));
         let bob_token_y_before_balance = coin::balance<TestBUSD>(signer::address_of(bob));
 
-        router::remove_liquidity<TestCAKE, TestBUSD>(bob, (bob_suppose_lp_balance as u64), 0, 0);
+        router::remove_liquidity<TestCIFARM, TestBUSD>(bob, (bob_suppose_lp_balance as u64), 0, 0);
         let bob_remove_liquidity_x = ((suppose_reserve_x) as u128) * bob_suppose_lp_balance / suppose_total_supply;
         let bob_remove_liquidity_y = ((suppose_reserve_y) as u128) * bob_suppose_lp_balance / suppose_total_supply;
         suppose_total_supply = suppose_total_supply - bob_suppose_lp_balance;
         suppose_reserve_x = suppose_reserve_x - (bob_remove_liquidity_x as u64);
         suppose_reserve_y = suppose_reserve_y - (bob_remove_liquidity_y as u64);
 
-        router::remove_liquidity<TestCAKE, TestBUSD>(alice, (alice_suppose_lp_balance as u64), 0, 0);
+        router::remove_liquidity<TestCIFARM, TestBUSD>(alice, (alice_suppose_lp_balance as u64), 0, 0);
         let alice_remove_liquidity_x = ((suppose_reserve_x) as u128) * alice_suppose_lp_balance / suppose_total_supply;
         let alice_remove_liquidity_y = ((suppose_reserve_y) as u128) * alice_suppose_lp_balance / suppose_total_supply;
         suppose_reserve_x = suppose_reserve_x - (alice_remove_liquidity_x as u64);
         suppose_reserve_y = suppose_reserve_y - (alice_remove_liquidity_y as u64);
 
-        let alice_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(alice));
-        let bob_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(bob));
-        let alice_token_x_after_balance = coin::balance<TestCAKE>(signer::address_of(alice));
+        let alice_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(alice));
+        let bob_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(bob));
+        let alice_token_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(alice));
         let alice_token_y_after_balance = coin::balance<TestBUSD>(signer::address_of(alice));
-        let bob_token_x_after_balance = coin::balance<TestCAKE>(signer::address_of(bob));
+        let bob_token_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(bob));
         let bob_token_y_after_balance = coin::balance<TestBUSD>(signer::address_of(bob));
-        let (balance_y, balance_x) = swap::token_balances<TestBUSD, TestCAKE>();
-        let (reserve_y, reserve_x, _) = swap::token_reserves<TestBUSD, TestCAKE>();
+        let (balance_y, balance_x) = swap::token_balances<TestBUSD, TestCIFARM>();
+        let (reserve_y, reserve_x, _) = swap::token_reserves<TestBUSD, TestCIFARM>();
         let total_supply = std::option::get_with_default(
-            &coin::supply<LPToken<TestBUSD, TestCAKE>>(),
+            &coin::supply<LPToken<TestBUSD, TestCIFARM>>(),
             0u128
         );
 
@@ -360,10 +360,10 @@ module cifarm::swap_test {
 
         let coin_owner = test_coins::init_coins();
 
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, user1, 100 * pow(10, 8));
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, user2, 100 * pow(10, 8));
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, user3, 100 * pow(10, 8));
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, user4, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, user1, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, user2, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, user3, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, user4, 100 * pow(10, 8));
 
         test_coins::register_and_mint<TestBUSD>(&coin_owner, user1, 100 * pow(10, 8));
         test_coins::register_and_mint<TestBUSD>(&coin_owner, user2, 100 * pow(10, 8));
@@ -383,10 +383,10 @@ module cifarm::swap_test {
         let user4_add_liquidity_y = 90 * pow(10, 8);
 
         // bob provider liquidity for 5:10 CAKE-BUSD
-        router::add_liquidity<TestCAKE, TestBUSD>(user1, user1_add_liquidity_x, user1_add_liquidity_y, 0, 0);
-        router::add_liquidity<TestCAKE, TestBUSD>(user2, user2_add_liquidity_x, user2_add_liquidity_y, 0, 0);
-        router::add_liquidity<TestCAKE, TestBUSD>(user3, user3_add_liquidity_x, user3_add_liquidity_y, 0, 0);
-        router::add_liquidity<TestCAKE, TestBUSD>(user4, user4_add_liquidity_x, user4_add_liquidity_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(user1, user1_add_liquidity_x, user1_add_liquidity_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(user2, user2_add_liquidity_x, user2_add_liquidity_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(user3, user3_add_liquidity_x, user3_add_liquidity_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(user4, user4_add_liquidity_x, user4_add_liquidity_y, 0, 0);
 
         let user1_suppose_lp_balance = math::sqrt(((user1_add_liquidity_x as u128) * (user1_add_liquidity_y as u128))) - MINIMUM_LIQUIDITY;
         let suppose_total_supply = user1_suppose_lp_balance + MINIMUM_LIQUIDITY;
@@ -405,69 +405,69 @@ module cifarm::swap_test {
         suppose_reserve_x = suppose_reserve_x + user4_add_liquidity_x;
         suppose_reserve_y = suppose_reserve_y + user4_add_liquidity_y;
 
-        let user1_lp_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(user1));
-        let user2_lp_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(user2));
-        let user3_lp_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(user3));
-        let user4_lp_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(user4));
+        let user1_lp_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(user1));
+        let user2_lp_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(user2));
+        let user3_lp_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(user3));
+        let user4_lp_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(user4));
 
         assert!((user1_suppose_lp_balance as u64) == user1_lp_balance, 99);
         assert!((user2_suppose_lp_balance as u64) == user2_lp_balance, 98);
         assert!((user3_suppose_lp_balance as u64) == user3_lp_balance, 97);
         assert!((user4_suppose_lp_balance as u64) == user4_lp_balance, 96);
 
-        let user1_token_x_before_balance = coin::balance<TestCAKE>(signer::address_of(user1));
+        let user1_token_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(user1));
         let user1_token_y_before_balance = coin::balance<TestBUSD>(signer::address_of(user1));
-        let user2_token_x_before_balance = coin::balance<TestCAKE>(signer::address_of(user2));
+        let user2_token_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(user2));
         let user2_token_y_before_balance = coin::balance<TestBUSD>(signer::address_of(user2));
-        let user3_token_x_before_balance = coin::balance<TestCAKE>(signer::address_of(user3));
+        let user3_token_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(user3));
         let user3_token_y_before_balance = coin::balance<TestBUSD>(signer::address_of(user3));
-        let user4_token_x_before_balance = coin::balance<TestCAKE>(signer::address_of(user4));
+        let user4_token_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(user4));
         let user4_token_y_before_balance = coin::balance<TestBUSD>(signer::address_of(user4));
 
-        router::remove_liquidity<TestCAKE, TestBUSD>(user1, (user1_suppose_lp_balance as u64), 0, 0);
+        router::remove_liquidity<TestCIFARM, TestBUSD>(user1, (user1_suppose_lp_balance as u64), 0, 0);
         let user1_remove_liquidity_x = ((suppose_reserve_x) as u128) * user1_suppose_lp_balance / suppose_total_supply;
         let user1_remove_liquidity_y = ((suppose_reserve_y) as u128) * user1_suppose_lp_balance / suppose_total_supply;
         suppose_total_supply = suppose_total_supply - user1_suppose_lp_balance;
         suppose_reserve_x = suppose_reserve_x - (user1_remove_liquidity_x as u64);
         suppose_reserve_y = suppose_reserve_y - (user1_remove_liquidity_y as u64);
 
-        router::remove_liquidity<TestCAKE, TestBUSD>(user2, (user2_suppose_lp_balance as u64), 0, 0);
+        router::remove_liquidity<TestCIFARM, TestBUSD>(user2, (user2_suppose_lp_balance as u64), 0, 0);
         let user2_remove_liquidity_x = ((suppose_reserve_x) as u128) * user2_suppose_lp_balance / suppose_total_supply;
         let user2_remove_liquidity_y = ((suppose_reserve_y) as u128) * user2_suppose_lp_balance / suppose_total_supply;
         suppose_total_supply = suppose_total_supply - user2_suppose_lp_balance;
         suppose_reserve_x = suppose_reserve_x - (user2_remove_liquidity_x as u64);
         suppose_reserve_y = suppose_reserve_y - (user2_remove_liquidity_y as u64);
 
-        router::remove_liquidity<TestCAKE, TestBUSD>(user3, (user3_suppose_lp_balance as u64), 0, 0);
+        router::remove_liquidity<TestCIFARM, TestBUSD>(user3, (user3_suppose_lp_balance as u64), 0, 0);
         let user3_remove_liquidity_x = ((suppose_reserve_x) as u128) * user3_suppose_lp_balance / suppose_total_supply;
         let user3_remove_liquidity_y = ((suppose_reserve_y) as u128) * user3_suppose_lp_balance / suppose_total_supply;
         suppose_total_supply = suppose_total_supply - user3_suppose_lp_balance;
         suppose_reserve_x = suppose_reserve_x - (user3_remove_liquidity_x as u64);
         suppose_reserve_y = suppose_reserve_y - (user3_remove_liquidity_y as u64);
 
-        router::remove_liquidity<TestCAKE, TestBUSD>(user4, (user4_suppose_lp_balance as u64), 0, 0);
+        router::remove_liquidity<TestCIFARM, TestBUSD>(user4, (user4_suppose_lp_balance as u64), 0, 0);
         let user4_remove_liquidity_x = ((suppose_reserve_x) as u128) * user4_suppose_lp_balance / suppose_total_supply;
         let user4_remove_liquidity_y = ((suppose_reserve_y) as u128) * user4_suppose_lp_balance / suppose_total_supply;
         suppose_reserve_x = suppose_reserve_x - (user4_remove_liquidity_x as u64);
         suppose_reserve_y = suppose_reserve_y - (user4_remove_liquidity_y as u64);
 
-        let user1_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(user1));
-        let user2_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(user2));
-        let user3_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(user3));
-        let user4_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(user4));
+        let user1_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(user1));
+        let user2_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(user2));
+        let user3_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(user3));
+        let user4_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(user4));
 
-        let user1_token_x_after_balance = coin::balance<TestCAKE>(signer::address_of(user1));
+        let user1_token_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(user1));
         let user1_token_y_after_balance = coin::balance<TestBUSD>(signer::address_of(user1));
-        let user2_token_x_after_balance = coin::balance<TestCAKE>(signer::address_of(user2));
+        let user2_token_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(user2));
         let user2_token_y_after_balance = coin::balance<TestBUSD>(signer::address_of(user2));
-        let user3_token_x_after_balance = coin::balance<TestCAKE>(signer::address_of(user3));
+        let user3_token_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(user3));
         let user3_token_y_after_balance = coin::balance<TestBUSD>(signer::address_of(user3));
-        let user4_token_x_after_balance = coin::balance<TestCAKE>(signer::address_of(user4));
+        let user4_token_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(user4));
         let user4_token_y_after_balance = coin::balance<TestBUSD>(signer::address_of(user4));
 
-        let (balance_y, balance_x) = swap::token_balances<TestBUSD, TestCAKE>();
-        let (reserve_y, reserve_x, _) = swap::token_reserves<TestBUSD, TestCAKE>();
-        let total_supply = swap::total_lp_supply<TestBUSD, TestCAKE>();
+        let (balance_y, balance_x) = swap::token_balances<TestBUSD, TestCIFARM>();
+        let (reserve_y, reserve_x, _) = swap::token_reserves<TestBUSD, TestCIFARM>();
+        let total_supply = swap::total_lp_supply<TestBUSD, TestCIFARM>();
 
         assert!((user1_token_x_after_balance - user1_token_x_before_balance) == (user1_remove_liquidity_x as u64), 95);
         assert!((user1_token_y_after_balance - user1_token_y_before_balance) == (user1_remove_liquidity_y as u64), 94);
@@ -505,8 +505,8 @@ module cifarm::swap_test {
 
         let coin_owner = test_coins::init_coins();
 
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, bob, 100 * pow(10, 8));
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, alice, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, bob, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, alice, 100 * pow(10, 8));
 
         test_coins::register_and_mint<TestBUSD>(&coin_owner, bob, 100 * pow(10, 8));
         test_coins::register_and_mint<TestBUSD>(&coin_owner, alice, 100 * pow(10, 8));
@@ -518,15 +518,15 @@ module cifarm::swap_test {
         let alice_liquidity_y = 2;
 
         // bob provider liquidity for 5:10 CAKE-BUSD
-        router::add_liquidity<TestCAKE, TestBUSD>(bob, bob_liquidity_x, bob_liquidity_y, 0, 0);
-        router::add_liquidity<TestCAKE, TestBUSD>(alice, alice_liquidity_x, alice_liquidity_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(bob, bob_liquidity_x, bob_liquidity_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(alice, alice_liquidity_x, alice_liquidity_y, 0, 0);
 
-        let bob_lp_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(bob));
-        let alice_lp_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(alice));
+        let bob_lp_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(bob));
+        let alice_lp_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(alice));
 
-        router::remove_liquidity<TestCAKE, TestBUSD>(bob, bob_lp_balance, 0, 0);
+        router::remove_liquidity<TestCIFARM, TestBUSD>(bob, bob_lp_balance, 0, 0);
         // expect the small amount will result one of the amount to be zero and unable to remove liquidity
-        router::remove_liquidity<TestCAKE, TestBUSD>(alice, alice_lp_balance, 0, 0);
+        router::remove_liquidity<TestCIFARM, TestBUSD>(alice, alice_lp_balance, 0, 0);
     }
 
     #[test(dev = @dev, admin = @default_admin, resource_account = @cifarm, treasury = @0x23456, bob = @0x12345, alice = @0x12346, aptos_framework = @0x1)]
@@ -546,42 +546,42 @@ module cifarm::swap_test {
 
         let coin_owner = test_coins::init_coins();
 
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, bob, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, bob, 100 * pow(10, 8));
         test_coins::register_and_mint<TestBUSD>(&coin_owner, bob, 100 * pow(10, 8));
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, alice, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, alice, 100 * pow(10, 8));
 
         let initial_reserve_x = 5 * pow(10, 8);
         let initial_reserve_y = 10 * pow(10, 8);
         let input_x = 2 * pow(10, 8);
         // bob provider liquidity for 5:10 CAKE-BUSD
-        router::add_liquidity<TestCAKE, TestBUSD>(bob, initial_reserve_x, initial_reserve_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(bob, initial_reserve_x, initial_reserve_y, 0, 0);
         let bob_suppose_lp_balance = math::sqrt(((initial_reserve_x as u128) * (initial_reserve_y as u128))) - MINIMUM_LIQUIDITY;
         let suppose_total_supply = bob_suppose_lp_balance + MINIMUM_LIQUIDITY;
 
-        // let bob_lp_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(bob));
-        let alice_token_x_before_balance = coin::balance<TestCAKE>(signer::address_of(alice));
+        // let bob_lp_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(bob));
+        let alice_token_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(alice));
 
-        router::swap_exact_input<TestCAKE, TestBUSD>(alice, input_x, 0);
+        router::swap_exact_input<TestCIFARM, TestBUSD>(alice, input_x, 0);
 
-        let alice_token_x_after_balance = coin::balance<TestCAKE>(signer::address_of(alice));
+        let alice_token_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(alice));
         let alice_token_y_after_balance = coin::balance<TestBUSD>(signer::address_of(alice));
 
         let output_y = calc_output_using_input(input_x, initial_reserve_x, initial_reserve_y);
         let new_reserve_x = initial_reserve_x + input_x;
         let new_reserve_y = initial_reserve_y - (output_y as u64);
 
-        let (reserve_y, reserve_x, _) = swap::token_reserves<TestBUSD, TestCAKE>();
+        let (reserve_y, reserve_x, _) = swap::token_reserves<TestBUSD, TestCIFARM>();
         assert!((alice_token_x_before_balance - alice_token_x_after_balance) == input_x, 99);
         assert!(alice_token_y_after_balance == (output_y as u64), 98);
         assert!(reserve_x == new_reserve_x, 97);
         assert!(reserve_y == new_reserve_y, 96);
 
-        let bob_token_x_before_balance = coin::balance<TestCAKE>(signer::address_of(bob));
+        let bob_token_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(bob));
         let bob_token_y_before_balance = coin::balance<TestBUSD>(signer::address_of(bob));
 
-        router::remove_liquidity<TestCAKE, TestBUSD>(bob, (bob_suppose_lp_balance as u64), 0, 0);
+        router::remove_liquidity<TestCIFARM, TestBUSD>(bob, (bob_suppose_lp_balance as u64), 0, 0);
 
-        let bob_token_x_after_balance = coin::balance<TestCAKE>(signer::address_of(bob));
+        let bob_token_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(bob));
         let bob_token_y_after_balance = coin::balance<TestBUSD>(signer::address_of(bob));
 
         let suppose_k_last = ((initial_reserve_x * initial_reserve_y) as u128);
@@ -598,10 +598,10 @@ module cifarm::swap_test {
         assert!((bob_token_x_after_balance - bob_token_x_before_balance) == (bob_remove_liquidity_x as u64), 95);
         assert!((bob_token_y_after_balance - bob_token_y_before_balance) == (bob_remove_liquidity_y as u64), 94);
 
-        swap::withdraw_fee<TestCAKE, TestBUSD>(treasury);
-        let treasury_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(treasury));
-        router::remove_liquidity<TestCAKE, TestBUSD>(treasury, (suppose_fee_amount as u64), 0, 0);
-        let treasury_token_x_after_balance = coin::balance<TestCAKE>(signer::address_of(treasury));
+        swap::withdraw_fee<TestCIFARM, TestBUSD>(treasury);
+        let treasury_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(treasury));
+        router::remove_liquidity<TestCIFARM, TestBUSD>(treasury, (suppose_fee_amount as u64), 0, 0);
+        let treasury_token_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(treasury));
         let treasury_token_y_after_balance = coin::balance<TestBUSD>(signer::address_of(treasury));
 
         let treasury_remove_liquidity_x = ((new_reserve_x) as u128) * suppose_fee_amount / suppose_total_supply;
@@ -629,47 +629,47 @@ module cifarm::swap_test {
 
         let coin_owner = test_coins::init_coins();
 
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, bob, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, bob, 100 * pow(10, 8));
         test_coins::register_and_mint<TestBUSD>(&coin_owner, bob, 100 * pow(10, 8));
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, alice, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, alice, 100 * pow(10, 8));
 
         let initial_reserve_x = 5 * pow(10, 8);
         let initial_reserve_y = 10 * pow(10, 8);
         let input_x = 2 * pow(10, 8);
         // bob provider liquidity for 5:10 CAKE-BUSD
-        router::add_liquidity<TestCAKE, TestBUSD>(bob, initial_reserve_x, initial_reserve_y, 0, 0);
-        if(swap_utils::sort_token_type<TestCAKE, TestBUSD>()){
-            swap::check_or_register_coin_store<LPToken<TestCAKE, TestBUSD>>(treasury);
+        router::add_liquidity<TestCIFARM, TestBUSD>(bob, initial_reserve_x, initial_reserve_y, 0, 0);
+        if(swap_utils::sort_token_type<TestCIFARM, TestBUSD>()){
+            swap::check_or_register_coin_store<LPToken<TestCIFARM, TestBUSD>>(treasury);
         }else{
-            swap::check_or_register_coin_store<LPToken<TestBUSD, TestCAKE>>(treasury);
+            swap::check_or_register_coin_store<LPToken<TestBUSD, TestCIFARM>>(treasury);
         };
         let bob_suppose_lp_balance = math::sqrt(((initial_reserve_x as u128) * (initial_reserve_y as u128))) - MINIMUM_LIQUIDITY;
         let suppose_total_supply = bob_suppose_lp_balance + MINIMUM_LIQUIDITY;
 
-        // let bob_lp_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(bob));
-        let alice_token_x_before_balance = coin::balance<TestCAKE>(signer::address_of(alice));
+        // let bob_lp_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(bob));
+        let alice_token_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(alice));
 
-        router::swap_exact_input<TestCAKE, TestBUSD>(alice, input_x, 0);
+        router::swap_exact_input<TestCIFARM, TestBUSD>(alice, input_x, 0);
 
-        let alice_token_x_after_balance = coin::balance<TestCAKE>(signer::address_of(alice));
+        let alice_token_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(alice));
         let alice_token_y_after_balance = coin::balance<TestBUSD>(signer::address_of(alice));
 
         let output_y = calc_output_using_input(input_x, initial_reserve_x, initial_reserve_y);
         let new_reserve_x = initial_reserve_x + input_x;
         let new_reserve_y = initial_reserve_y - (output_y as u64);
 
-        let (reserve_y, reserve_x, _) = swap::token_reserves<TestBUSD, TestCAKE>();
+        let (reserve_y, reserve_x, _) = swap::token_reserves<TestBUSD, TestCIFARM>();
         assert!((alice_token_x_before_balance - alice_token_x_after_balance) == input_x, 99);
         assert!(alice_token_y_after_balance == (output_y as u64), 98);
         assert!(reserve_x == new_reserve_x, 97);
         assert!(reserve_y == new_reserve_y, 96);
 
-        let bob_token_x_before_balance = coin::balance<TestCAKE>(signer::address_of(bob));
+        let bob_token_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(bob));
         let bob_token_y_before_balance = coin::balance<TestBUSD>(signer::address_of(bob));
 
-        router::remove_liquidity<TestCAKE, TestBUSD>(bob, (bob_suppose_lp_balance as u64), 0, 0);
+        router::remove_liquidity<TestCIFARM, TestBUSD>(bob, (bob_suppose_lp_balance as u64), 0, 0);
 
-        let bob_token_x_after_balance = coin::balance<TestCAKE>(signer::address_of(bob));
+        let bob_token_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(bob));
         let bob_token_y_after_balance = coin::balance<TestBUSD>(signer::address_of(bob));
 
         let suppose_k_last = ((initial_reserve_x * initial_reserve_y) as u128);
@@ -686,10 +686,10 @@ module cifarm::swap_test {
         assert!((bob_token_x_after_balance - bob_token_x_before_balance) == (bob_remove_liquidity_x as u64), 95);
         assert!((bob_token_y_after_balance - bob_token_y_before_balance) == (bob_remove_liquidity_y as u64), 94);
 
-        swap::withdraw_fee_noauth<TestCAKE, TestBUSD>();
-        let treasury_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(treasury));
-        router::remove_liquidity<TestCAKE, TestBUSD>(treasury, (suppose_fee_amount as u64), 0, 0);
-        let treasury_token_x_after_balance = coin::balance<TestCAKE>(signer::address_of(treasury));
+        swap::withdraw_fee_noauth<TestCIFARM, TestBUSD>();
+        let treasury_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(treasury));
+        router::remove_liquidity<TestCIFARM, TestBUSD>(treasury, (suppose_fee_amount as u64), 0, 0);
+        let treasury_token_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(treasury));
         let treasury_token_y_after_balance = coin::balance<TestBUSD>(signer::address_of(treasury));
 
         let treasury_remove_liquidity_x = ((new_reserve_x) as u128) * suppose_fee_amount / suppose_total_supply;
@@ -717,17 +717,17 @@ module cifarm::swap_test {
 
         let coin_owner = test_coins::init_coins();
 
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, bob, MAX_U64);
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, bob, MAX_U64);
         test_coins::register_and_mint<TestBUSD>(&coin_owner, bob, MAX_U64);
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, alice, MAX_U64);
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, alice, MAX_U64);
 
         let initial_reserve_x = MAX_U64 / pow(10, 4);
         let initial_reserve_y = MAX_U64 / pow(10, 4);
         let input_x = pow(10, 9) * pow(10, 8);
         // bob provider liquidity for 5:10 CAKE-BUSD
-        router::add_liquidity<TestCAKE, TestBUSD>(bob, initial_reserve_x, initial_reserve_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(bob, initial_reserve_x, initial_reserve_y, 0, 0);
 
-        router::swap_exact_input<TestCAKE, TestBUSD>(alice, input_x, 0);
+        router::swap_exact_input<TestCIFARM, TestBUSD>(alice, input_x, 0);
     }
 
     #[test(dev = @dev, admin = @default_admin, resource_account = @cifarm, treasury = @0x23456, bob = @0x12345, alice = @0x12346, aptos_framework = @0x1)]
@@ -748,18 +748,18 @@ module cifarm::swap_test {
 
         let coin_owner = test_coins::init_coins();
 
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, bob, 1000 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, bob, 1000 * pow(10, 8));
         test_coins::register_and_mint<TestBUSD>(&coin_owner, bob, 1000 * pow(10, 8));
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, alice, 1000 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, alice, 1000 * pow(10, 8));
 
         let initial_reserve_x = 100 * pow(10, 8);
         let initial_reserve_y = 200 * pow(10, 8);
         let input_x = 10000 * pow(10, 8);
         // bob provider liquidity for 5:10 CAKE-BUSD
-        router::add_liquidity<TestCAKE, TestBUSD>(bob, initial_reserve_x, initial_reserve_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(bob, initial_reserve_x, initial_reserve_y, 0, 0);
 
 
-        router::swap_exact_input<TestCAKE, TestBUSD>(alice, input_x, 0);
+        router::swap_exact_input<TestCIFARM, TestBUSD>(alice, input_x, 0);
     }
 
     #[test(dev = @dev, admin = @default_admin, resource_account = @cifarm, treasury = @0x23456, bob = @0x12345, alice = @0x12346, aptos_framework = @0x1)]
@@ -780,18 +780,18 @@ module cifarm::swap_test {
 
         let coin_owner = test_coins::init_coins();
 
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, bob, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, bob, 100 * pow(10, 8));
         test_coins::register_and_mint<TestBUSD>(&coin_owner, bob, 100 * pow(10, 8));
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, alice, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, alice, 100 * pow(10, 8));
 
         let initial_reserve_x = 5 * pow(10, 8);
         let initial_reserve_y = 10 * pow(10, 8);
         let input_x = 2 * pow(10, 8);
         // bob provider liquidity for 5:10 CAKE-BUSD
-        router::add_liquidity<TestCAKE, TestBUSD>(bob, initial_reserve_x, initial_reserve_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(bob, initial_reserve_x, initial_reserve_y, 0, 0);
 
         let output_y = calc_output_using_input(input_x, initial_reserve_x, initial_reserve_y);
-        router::swap_exact_input<TestCAKE, TestBUSD>(alice, input_x, ((output_y + 1) as u64));
+        router::swap_exact_input<TestCIFARM, TestBUSD>(alice, input_x, ((output_y + 1) as u64));
     }
 
     #[test(dev = @dev, admin = @default_admin, resource_account = @cifarm, treasury = @0x23456, bob = @0x12345, alice = @0x12346, aptos_framework = @0x1)]
@@ -811,9 +811,9 @@ module cifarm::swap_test {
 
         let coin_owner = test_coins::init_coins();
 
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, bob, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, bob, 100 * pow(10, 8));
         test_coins::register_and_mint<TestBUSD>(&coin_owner, bob, 100 * pow(10, 8));
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, alice, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, alice, 100 * pow(10, 8));
 
         let initial_reserve_x = 5 * pow(10, 8);
         let initial_reserve_y = 10 * pow(10, 8);
@@ -821,33 +821,33 @@ module cifarm::swap_test {
         let input_x_max = 1 * pow(10, 8);
 
         // bob provider liquidity for 5:10 CAKE-BUSD
-        router::add_liquidity<TestCAKE, TestBUSD>(bob, initial_reserve_x, initial_reserve_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(bob, initial_reserve_x, initial_reserve_y, 0, 0);
         let bob_suppose_lp_balance = math::sqrt(((initial_reserve_x as u128) * (initial_reserve_y as u128))) - MINIMUM_LIQUIDITY;
         let suppose_total_supply = bob_suppose_lp_balance + MINIMUM_LIQUIDITY;
 
-        let alice_token_x_before_balance = coin::balance<TestCAKE>(signer::address_of(alice));
+        let alice_token_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(alice));
 
-        router::swap_exact_output<TestCAKE, TestBUSD>(alice, output_y, input_x_max);
+        router::swap_exact_output<TestCIFARM, TestBUSD>(alice, output_y, input_x_max);
 
-        let alice_token_x_after_balance = coin::balance<TestCAKE>(signer::address_of(alice));
+        let alice_token_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(alice));
         let alice_token_y_after_balance = coin::balance<TestBUSD>(signer::address_of(alice));
 
         let input_x = calc_input_using_output(output_y, initial_reserve_x, initial_reserve_y);
         let new_reserve_x = initial_reserve_x + (input_x as u64);
         let new_reserve_y = initial_reserve_y - output_y;
 
-        let (reserve_y, reserve_x, _) = swap::token_reserves<TestBUSD, TestCAKE>();
+        let (reserve_y, reserve_x, _) = swap::token_reserves<TestBUSD, TestCIFARM>();
         assert!((alice_token_x_before_balance - alice_token_x_after_balance) == (input_x as u64), 99);
         assert!(alice_token_y_after_balance == output_y, 98);
         assert!(reserve_x == new_reserve_x, 97);
         assert!(reserve_y == new_reserve_y, 96);
 
-        let bob_token_x_before_balance = coin::balance<TestCAKE>(signer::address_of(bob));
+        let bob_token_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(bob));
         let bob_token_y_before_balance = coin::balance<TestBUSD>(signer::address_of(bob));
 
-        router::remove_liquidity<TestCAKE, TestBUSD>(bob, (bob_suppose_lp_balance as u64), 0, 0);
+        router::remove_liquidity<TestCIFARM, TestBUSD>(bob, (bob_suppose_lp_balance as u64), 0, 0);
 
-        let bob_token_x_after_balance = coin::balance<TestCAKE>(signer::address_of(bob));
+        let bob_token_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(bob));
         let bob_token_y_after_balance = coin::balance<TestBUSD>(signer::address_of(bob));
 
         let suppose_k_last = ((initial_reserve_x * initial_reserve_y) as u128);
@@ -864,10 +864,10 @@ module cifarm::swap_test {
         assert!((bob_token_x_after_balance - bob_token_x_before_balance) == (bob_remove_liquidity_x as u64), 95);
         assert!((bob_token_y_after_balance - bob_token_y_before_balance) == (bob_remove_liquidity_y as u64), 94);
 
-        swap::withdraw_fee<TestCAKE, TestBUSD>(treasury);
-        let treasury_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(treasury));
-        router::remove_liquidity<TestCAKE, TestBUSD>(treasury, (suppose_fee_amount as u64), 0, 0);
-        let treasury_token_x_after_balance = coin::balance<TestCAKE>(signer::address_of(treasury));
+        swap::withdraw_fee<TestCIFARM, TestBUSD>(treasury);
+        let treasury_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(treasury));
+        router::remove_liquidity<TestCIFARM, TestBUSD>(treasury, (suppose_fee_amount as u64), 0, 0);
+        let treasury_token_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(treasury));
         let treasury_token_y_after_balance = coin::balance<TestBUSD>(signer::address_of(treasury));
 
         let treasury_remove_liquidity_x = ((new_reserve_x) as u128) * suppose_fee_amount / suppose_total_supply;
@@ -896,9 +896,9 @@ module cifarm::swap_test {
 
         let coin_owner = test_coins::init_coins();
 
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, bob, 1000 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, bob, 1000 * pow(10, 8));
         test_coins::register_and_mint<TestBUSD>(&coin_owner, bob, 1000 * pow(10, 8));
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, alice, 1000 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, alice, 1000 * pow(10, 8));
 
         let initial_reserve_x = 100 * pow(10, 8);
         let initial_reserve_y = 200 * pow(10, 8);
@@ -906,9 +906,9 @@ module cifarm::swap_test {
         let input_x_max = 1000 * pow(10, 8);
 
         // bob provider liquidity for 5:10 CAKE-BUSD
-        router::add_liquidity<TestCAKE, TestBUSD>(bob, initial_reserve_x, initial_reserve_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(bob, initial_reserve_x, initial_reserve_y, 0, 0);
 
-        router::swap_exact_output<TestCAKE, TestBUSD>(alice, output_y, input_x_max);
+        router::swap_exact_output<TestCIFARM, TestBUSD>(alice, output_y, input_x_max);
     }
 
     #[test(dev = @dev, admin = @default_admin, resource_account = @cifarm, treasury = @0x23456, bob = @0x12345, alice = @0x12346, aptos_framework = @0x1)]
@@ -929,19 +929,19 @@ module cifarm::swap_test {
 
         let coin_owner = test_coins::init_coins();
 
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, bob, 1000 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, bob, 1000 * pow(10, 8));
         test_coins::register_and_mint<TestBUSD>(&coin_owner, bob, 1000 * pow(10, 8));
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, alice, 1000 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, alice, 1000 * pow(10, 8));
 
         let initial_reserve_x = 50 * pow(10, 8);
         let initial_reserve_y = 100 * pow(10, 8);
         let output_y = 166319299;
 
         // bob provider liquidity for 5:10 CAKE-BUSD
-        router::add_liquidity<TestCAKE, TestBUSD>(bob, initial_reserve_x, initial_reserve_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(bob, initial_reserve_x, initial_reserve_y, 0, 0);
 
         let input_x = calc_input_using_output(output_y, initial_reserve_x, initial_reserve_y);
-        router::swap_exact_output<TestCAKE, TestBUSD>(alice, output_y, ((input_x - 1) as u64));
+        router::swap_exact_output<TestCIFARM, TestBUSD>(alice, output_y, ((input_x - 1) as u64));
     }
 
     #[test(dev = @dev, admin = @default_admin, resource_account = @cifarm, treasury = @0x23456, bob = @0x12345, alice = @0x12346, aptos_framework = @0x1)]
@@ -961,9 +961,9 @@ module cifarm::swap_test {
 
         let coin_owner = test_coins::init_coins();
 
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, bob, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, bob, 100 * pow(10, 8));
         test_coins::register_and_mint<TestBUSD>(&coin_owner, bob, 100 * pow(10, 8));
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, alice, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, alice, 100 * pow(10, 8));
 
         let initial_reserve_x = 5 * pow(10, 8);
         let initial_reserve_y = 10 * pow(10, 8);
@@ -971,47 +971,47 @@ module cifarm::swap_test {
         // let input_x_max = 1 * pow(10, 8);
 
         // bob provider liquidity for 5:10 CAKE-BUSD
-        router::add_liquidity<TestCAKE, TestBUSD>(bob, initial_reserve_x, initial_reserve_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(bob, initial_reserve_x, initial_reserve_y, 0, 0);
         let bob_suppose_lp_balance = math::sqrt(((initial_reserve_x as u128) * (initial_reserve_y as u128))) - MINIMUM_LIQUIDITY;
         let suppose_total_supply = bob_suppose_lp_balance + MINIMUM_LIQUIDITY;
 
         let alice_addr = signer::address_of(alice);
 
-        let alice_token_x_before_balance = coin::balance<TestCAKE>(alice_addr);
+        let alice_token_x_before_balance = coin::balance<TestCIFARM>(alice_addr);
 
         let input_x = calc_input_using_output(output_y, initial_reserve_x, initial_reserve_y); 
 
-        let x_in_amount = router::get_amount_in<TestCAKE, TestBUSD>(output_y);
+        let x_in_amount = router::get_amount_in<TestCIFARM, TestBUSD>(output_y);
         assert!(x_in_amount == (input_x as u64), 102);
 
         let input_x_coin = coin::withdraw(alice, (input_x as u64));
 
-        let (x_out, y_out) =  router::swap_x_to_exact_y_direct_external<TestCAKE, TestBUSD>(input_x_coin, output_y);
+        let (x_out, y_out) =  router::swap_x_to_exact_y_direct_external<TestCIFARM, TestBUSD>(input_x_coin, output_y);
 
         assert!(coin::value(&x_out) == 0, 101);
         assert!(coin::value(&y_out) == output_y, 100);
         coin::register<TestBUSD>(alice);
-        coin::deposit<TestCAKE>(alice_addr, x_out);
+        coin::deposit<TestCIFARM>(alice_addr, x_out);
         coin::deposit<TestBUSD>(alice_addr, y_out);
 
-        let alice_token_x_after_balance = coin::balance<TestCAKE>(alice_addr);
+        let alice_token_x_after_balance = coin::balance<TestCIFARM>(alice_addr);
         let alice_token_y_after_balance = coin::balance<TestBUSD>(alice_addr);
 
         let new_reserve_x = initial_reserve_x + (input_x as u64);
         let new_reserve_y = initial_reserve_y - output_y;
 
-        let (reserve_y, reserve_x, _) = swap::token_reserves<TestBUSD, TestCAKE>();
+        let (reserve_y, reserve_x, _) = swap::token_reserves<TestBUSD, TestCIFARM>();
         assert!((alice_token_x_before_balance - alice_token_x_after_balance) == (input_x as u64), 99);
         assert!(alice_token_y_after_balance == output_y, 98);
         assert!(reserve_x == new_reserve_x, 97);
         assert!(reserve_y == new_reserve_y, 96);
 
-        let bob_token_x_before_balance = coin::balance<TestCAKE>(signer::address_of(bob));
+        let bob_token_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(bob));
         let bob_token_y_before_balance = coin::balance<TestBUSD>(signer::address_of(bob));
 
-        router::remove_liquidity<TestCAKE, TestBUSD>(bob, (bob_suppose_lp_balance as u64), 0, 0);
+        router::remove_liquidity<TestCIFARM, TestBUSD>(bob, (bob_suppose_lp_balance as u64), 0, 0);
 
-        let bob_token_x_after_balance = coin::balance<TestCAKE>(signer::address_of(bob));
+        let bob_token_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(bob));
         let bob_token_y_after_balance = coin::balance<TestBUSD>(signer::address_of(bob));
 
         let suppose_k_last = ((initial_reserve_x * initial_reserve_y) as u128);
@@ -1028,10 +1028,10 @@ module cifarm::swap_test {
         assert!((bob_token_x_after_balance - bob_token_x_before_balance) == (bob_remove_liquidity_x as u64), 95);
         assert!((bob_token_y_after_balance - bob_token_y_before_balance) == (bob_remove_liquidity_y as u64), 94);
 
-        swap::withdraw_fee<TestCAKE, TestBUSD>(treasury);
-        let treasury_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(treasury));
-        router::remove_liquidity<TestCAKE, TestBUSD>(treasury, (suppose_fee_amount as u64), 0, 0);
-        let treasury_token_x_after_balance = coin::balance<TestCAKE>(signer::address_of(treasury));
+        swap::withdraw_fee<TestCIFARM, TestBUSD>(treasury);
+        let treasury_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(treasury));
+        router::remove_liquidity<TestCIFARM, TestBUSD>(treasury, (suppose_fee_amount as u64), 0, 0);
+        let treasury_token_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(treasury));
         let treasury_token_y_after_balance = coin::balance<TestBUSD>(signer::address_of(treasury));
 
         let treasury_remove_liquidity_x = ((new_reserve_x) as u128) * suppose_fee_amount / suppose_total_supply;
@@ -1059,9 +1059,9 @@ module cifarm::swap_test {
 
         let coin_owner = test_coins::init_coins();
 
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, bob, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, bob, 100 * pow(10, 8));
         test_coins::register_and_mint<TestBUSD>(&coin_owner, bob, 100 * pow(10, 8));
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, alice, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, alice, 100 * pow(10, 8));
 
         let initial_reserve_x = 5 * pow(10, 8);
         let initial_reserve_y = 10 * pow(10, 8);
@@ -1069,13 +1069,13 @@ module cifarm::swap_test {
         // let input_x_max = 1 * pow(10, 8);
 
         // bob provider liquidity for 5:10 CAKE-BUSD
-        router::add_liquidity<TestCAKE, TestBUSD>(bob, initial_reserve_x, initial_reserve_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(bob, initial_reserve_x, initial_reserve_y, 0, 0);
         let bob_suppose_lp_balance = math::sqrt(((initial_reserve_x as u128) * (initial_reserve_y as u128))) - MINIMUM_LIQUIDITY;
         let suppose_total_supply = bob_suppose_lp_balance + MINIMUM_LIQUIDITY;
 
         let alice_addr = signer::address_of(alice);
 
-        let alice_token_x_before_balance = coin::balance<TestCAKE>(alice_addr);
+        let alice_token_x_before_balance = coin::balance<TestCIFARM>(alice_addr);
 
         let input_x = calc_input_using_output(output_y, initial_reserve_x, initial_reserve_y); 
 
@@ -1083,32 +1083,32 @@ module cifarm::swap_test {
 
         let input_x_coin = coin::withdraw(alice, (input_x as u64) + x_in_more);
 
-        let (x_out, y_out) =  router::swap_x_to_exact_y_direct_external<TestCAKE, TestBUSD>(input_x_coin, output_y);
+        let (x_out, y_out) =  router::swap_x_to_exact_y_direct_external<TestCIFARM, TestBUSD>(input_x_coin, output_y);
 
         assert!(coin::value(&x_out) == x_in_more, 101);
         assert!(coin::value(&y_out) == output_y, 100);
         coin::register<TestBUSD>(alice);
-        coin::deposit<TestCAKE>(alice_addr, x_out);
+        coin::deposit<TestCIFARM>(alice_addr, x_out);
         coin::deposit<TestBUSD>(alice_addr, y_out);
 
-        let alice_token_x_after_balance = coin::balance<TestCAKE>(alice_addr);
+        let alice_token_x_after_balance = coin::balance<TestCIFARM>(alice_addr);
         let alice_token_y_after_balance = coin::balance<TestBUSD>(alice_addr);
 
         let new_reserve_x = initial_reserve_x + (input_x as u64);
         let new_reserve_y = initial_reserve_y - output_y;
 
-        let (reserve_y, reserve_x, _) = swap::token_reserves<TestBUSD, TestCAKE>();
+        let (reserve_y, reserve_x, _) = swap::token_reserves<TestBUSD, TestCIFARM>();
         assert!((alice_token_x_before_balance - alice_token_x_after_balance) == (input_x as u64), 99);
         assert!(alice_token_y_after_balance == output_y, 98);
         assert!(reserve_x == new_reserve_x, 97);
         assert!(reserve_y == new_reserve_y, 96);
 
-        let bob_token_x_before_balance = coin::balance<TestCAKE>(signer::address_of(bob));
+        let bob_token_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(bob));
         let bob_token_y_before_balance = coin::balance<TestBUSD>(signer::address_of(bob));
 
-        router::remove_liquidity<TestCAKE, TestBUSD>(bob, (bob_suppose_lp_balance as u64), 0, 0);
+        router::remove_liquidity<TestCIFARM, TestBUSD>(bob, (bob_suppose_lp_balance as u64), 0, 0);
 
-        let bob_token_x_after_balance = coin::balance<TestCAKE>(signer::address_of(bob));
+        let bob_token_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(bob));
         let bob_token_y_after_balance = coin::balance<TestBUSD>(signer::address_of(bob));
 
         let suppose_k_last = ((initial_reserve_x * initial_reserve_y) as u128);
@@ -1125,10 +1125,10 @@ module cifarm::swap_test {
         assert!((bob_token_x_after_balance - bob_token_x_before_balance) == (bob_remove_liquidity_x as u64), 95);
         assert!((bob_token_y_after_balance - bob_token_y_before_balance) == (bob_remove_liquidity_y as u64), 94);
 
-        swap::withdraw_fee<TestCAKE, TestBUSD>(treasury);
-        let treasury_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(treasury));
-        router::remove_liquidity<TestCAKE, TestBUSD>(treasury, (suppose_fee_amount as u64), 0, 0);
-        let treasury_token_x_after_balance = coin::balance<TestCAKE>(signer::address_of(treasury));
+        swap::withdraw_fee<TestCIFARM, TestBUSD>(treasury);
+        let treasury_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(treasury));
+        router::remove_liquidity<TestCIFARM, TestBUSD>(treasury, (suppose_fee_amount as u64), 0, 0);
+        let treasury_token_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(treasury));
         let treasury_token_y_after_balance = coin::balance<TestBUSD>(signer::address_of(treasury));
 
         let treasury_remove_liquidity_x = ((new_reserve_x) as u128) * suppose_fee_amount / suppose_total_supply;
@@ -1157,9 +1157,9 @@ module cifarm::swap_test {
 
         let coin_owner = test_coins::init_coins();
 
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, bob, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, bob, 100 * pow(10, 8));
         test_coins::register_and_mint<TestBUSD>(&coin_owner, bob, 100 * pow(10, 8));
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, alice, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, alice, 100 * pow(10, 8));
 
         let initial_reserve_x = 5 * pow(10, 8);
         let initial_reserve_y = 10 * pow(10, 8);
@@ -1167,7 +1167,7 @@ module cifarm::swap_test {
         // let input_x_max = 1 * pow(10, 8);
 
         // bob provider liquidity for 5:10 CAKE-BUSD
-        router::add_liquidity<TestCAKE, TestBUSD>(bob, initial_reserve_x, initial_reserve_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(bob, initial_reserve_x, initial_reserve_y, 0, 0);
 
         let alice_addr = signer::address_of(alice);
 
@@ -1177,10 +1177,10 @@ module cifarm::swap_test {
 
         let input_x_coin = coin::withdraw(alice, (input_x as u64) - x_in_less);
 
-        let (x_out, y_out) =  router::swap_x_to_exact_y_direct_external<TestCAKE, TestBUSD>(input_x_coin, output_y);
+        let (x_out, y_out) =  router::swap_x_to_exact_y_direct_external<TestCIFARM, TestBUSD>(input_x_coin, output_y);
 
         coin::register<TestBUSD>(alice);
-        coin::deposit<TestCAKE>(alice_addr, x_out);
+        coin::deposit<TestCIFARM>(alice_addr, x_out);
         coin::deposit<TestBUSD>(alice_addr, y_out);
     }
 
@@ -1201,9 +1201,9 @@ module cifarm::swap_test {
 
         let coin_owner = test_coins::init_coins();
 
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, bob, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, bob, 100 * pow(10, 8));
         test_coins::register_and_mint<TestBUSD>(&coin_owner, bob, 100 * pow(10, 8));
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, alice, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, alice, 100 * pow(10, 8));
 
         let initial_reserve_x = 5 * pow(10, 8);
         let initial_reserve_y = 10 * pow(10, 8);
@@ -1212,16 +1212,16 @@ module cifarm::swap_test {
         // let input_x_max = 1 * pow(10, 8);
 
         // bob provider liquidity for 5:10 CAKE-BUSD
-        router::add_liquidity<TestCAKE, TestBUSD>(bob, initial_reserve_x, initial_reserve_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(bob, initial_reserve_x, initial_reserve_y, 0, 0);
 
         let input_x = calc_input_using_output(output_y, initial_reserve_x, initial_reserve_y); 
 
-        let x_in_amount = router::get_amount_in<TestCAKE, TestBUSD>(output_y);
+        let x_in_amount = router::get_amount_in<TestCIFARM, TestBUSD>(output_y);
         assert!(x_in_amount == (input_x as u64), 102);
 
         let input_y = calc_input_using_output(output_x, initial_reserve_y, initial_reserve_x); 
 
-        let y_in_amount = router::get_amount_in<TestBUSD, TestCAKE>(output_x);
+        let y_in_amount = router::get_amount_in<TestBUSD, TestCIFARM>(output_x);
         assert!(y_in_amount == (input_y as u64), 101);
     }
 
@@ -1242,10 +1242,10 @@ module cifarm::swap_test {
 
         let coin_owner = test_coins::init_coins();
 
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, bob, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, bob, 100 * pow(10, 8));
         test_coins::register_and_mint<TestBUSD>(&coin_owner, bob, 200 * pow(10, 8));
         test_coins::register_and_mint<TestUSDC>(&coin_owner, bob, 200 * pow(10, 8));
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, alice, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, alice, 100 * pow(10, 8));
 
         let initial_reserve_xy_x = 5 * pow(10, 8);
         let initial_reserve_xy_y = 10 * pow(10, 8);
@@ -1254,7 +1254,7 @@ module cifarm::swap_test {
         let input_x = 1 * pow(10, 8);
 
         // bob provider liquidity for 1:2 CAKE-BUSD
-        router::add_liquidity<TestCAKE, TestBUSD>(bob, initial_reserve_xy_x, initial_reserve_xy_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(bob, initial_reserve_xy_x, initial_reserve_xy_y, 0, 0);
         let bob_suppose_xy_lp_balance = math::sqrt(((initial_reserve_xy_x as u128) * (initial_reserve_xy_y as u128))) - MINIMUM_LIQUIDITY;
         let suppose_xy_total_supply = bob_suppose_xy_lp_balance + MINIMUM_LIQUIDITY;
         // bob provider liquidity for 2:1 USDC-BUSD
@@ -1262,11 +1262,11 @@ module cifarm::swap_test {
         let bob_suppose_yz_lp_balance = math::sqrt(((initial_reserve_yz_y as u128) * (initial_reserve_yz_z as u128))) - MINIMUM_LIQUIDITY;
         let suppose_yz_total_supply = bob_suppose_yz_lp_balance + MINIMUM_LIQUIDITY;
 
-        let alice_token_x_before_balance = coin::balance<TestCAKE>(signer::address_of(alice));
+        let alice_token_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(alice));
 
-        router::swap_exact_input_doublehop<TestCAKE, TestBUSD, TestUSDC>(alice, input_x, 0);
+        router::swap_exact_input_doublehop<TestCIFARM, TestBUSD, TestUSDC>(alice, input_x, 0);
 
-        let alice_token_x_after_balance = coin::balance<TestCAKE>(signer::address_of(alice));
+        let alice_token_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(alice));
         let alice_token_z_after_balance = coin::balance<TestUSDC>(signer::address_of(alice));
 
         let output_y = calc_output_using_input(input_x, initial_reserve_xy_x, initial_reserve_xy_y);
@@ -1276,7 +1276,7 @@ module cifarm::swap_test {
         let new_reserve_yz_y = initial_reserve_yz_y + (output_y as u64);
         let new_reserve_yz_z = initial_reserve_yz_z - (output_z as u64);
 
-        let (reserve_xy_y, reserve_xy_x, _) = swap::token_reserves<TestBUSD, TestCAKE>();
+        let (reserve_xy_y, reserve_xy_x, _) = swap::token_reserves<TestBUSD, TestCIFARM>();
         let (reserve_yz_y, reserve_yz_z, _) = swap::token_reserves<TestBUSD, TestUSDC>();
         assert!((alice_token_x_before_balance - alice_token_x_after_balance) == input_x, 99);
         assert!(alice_token_z_after_balance == (output_z as u64), 98);
@@ -1285,12 +1285,12 @@ module cifarm::swap_test {
         assert!(reserve_yz_y == new_reserve_yz_y, 97);
         assert!(reserve_yz_z == new_reserve_yz_z, 96);
 
-        let bob_token_xy_x_before_balance = coin::balance<TestCAKE>(signer::address_of(bob));
+        let bob_token_xy_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(bob));
         let bob_token_xy_y_before_balance = coin::balance<TestBUSD>(signer::address_of(bob));
 
-        router::remove_liquidity<TestCAKE, TestBUSD>(bob, (bob_suppose_xy_lp_balance as u64), 0, 0);
+        router::remove_liquidity<TestCIFARM, TestBUSD>(bob, (bob_suppose_xy_lp_balance as u64), 0, 0);
 
-        let bob_token_xy_x_after_balance = coin::balance<TestCAKE>(signer::address_of(bob));
+        let bob_token_xy_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(bob));
         let bob_token_xy_y_after_balance = coin::balance<TestBUSD>(signer::address_of(bob));
 
         let suppose_xy_k_last = ((initial_reserve_xy_x * initial_reserve_xy_y) as u128);
@@ -1329,10 +1329,10 @@ module cifarm::swap_test {
         assert!((bob_token_yz_y_after_balance - bob_token_yz_y_before_balance) == (bob_remove_liquidity_yz_y as u64), 95);
         assert!((bob_token_yz_z_after_balance - bob_token_yz_z_before_balance) == (bob_remove_liquidity_yz_z as u64), 94);
 
-        swap::withdraw_fee<TestCAKE, TestBUSD>(treasury);
-        let treasury_xy_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(treasury));
-        router::remove_liquidity<TestCAKE, TestBUSD>(treasury, (suppose_xy_fee_amount as u64), 0, 0);
-        let treasury_token_xy_x_after_balance = coin::balance<TestCAKE>(signer::address_of(treasury));
+        swap::withdraw_fee<TestCIFARM, TestBUSD>(treasury);
+        let treasury_xy_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(treasury));
+        router::remove_liquidity<TestCIFARM, TestBUSD>(treasury, (suppose_xy_fee_amount as u64), 0, 0);
+        let treasury_token_xy_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(treasury));
         let treasury_token_xy_y_after_balance = coin::balance<TestBUSD>(signer::address_of(treasury));
 
         let treasury_remove_liquidity_xy_x = ((new_reserve_xy_x) as u128) * suppose_xy_fee_amount / suppose_xy_total_supply;
@@ -1373,10 +1373,10 @@ module cifarm::swap_test {
 
         let coin_owner = test_coins::init_coins();
 
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, bob, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, bob, 100 * pow(10, 8));
         test_coins::register_and_mint<TestBUSD>(&coin_owner, bob, 200 * pow(10, 8));
         test_coins::register_and_mint<TestUSDC>(&coin_owner, bob, 200 * pow(10, 8));
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, alice, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, alice, 100 * pow(10, 8));
 
         let initial_reserve_xy_x = 5 * pow(10, 8);
         let initial_reserve_xy_y = 10 * pow(10, 8);
@@ -1385,7 +1385,7 @@ module cifarm::swap_test {
         let output_z = 249140454;
 
         // bob provider liquidity for 1:2 CAKE-BUSD
-        router::add_liquidity<TestCAKE, TestBUSD>(bob, initial_reserve_xy_x, initial_reserve_xy_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(bob, initial_reserve_xy_x, initial_reserve_xy_y, 0, 0);
         let bob_suppose_xy_lp_balance = math::sqrt(((initial_reserve_xy_x as u128) * (initial_reserve_xy_y as u128))) - MINIMUM_LIQUIDITY;
         let suppose_xy_total_supply = bob_suppose_xy_lp_balance + MINIMUM_LIQUIDITY;
         // bob provider liquidity for 2:1 USDC-BUSD
@@ -1393,11 +1393,11 @@ module cifarm::swap_test {
         let bob_suppose_yz_lp_balance = math::sqrt(((initial_reserve_yz_y as u128) * (initial_reserve_yz_z as u128))) - MINIMUM_LIQUIDITY;
         let suppose_yz_total_supply = bob_suppose_yz_lp_balance + MINIMUM_LIQUIDITY;
 
-        let alice_token_x_before_balance = coin::balance<TestCAKE>(signer::address_of(alice));
+        let alice_token_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(alice));
 
-        router::swap_exact_output_doublehop<TestCAKE, TestBUSD, TestUSDC>(alice, output_z, 1 * pow(10, 8));
+        router::swap_exact_output_doublehop<TestCIFARM, TestBUSD, TestUSDC>(alice, output_z, 1 * pow(10, 8));
 
-        let alice_token_x_after_balance = coin::balance<TestCAKE>(signer::address_of(alice));
+        let alice_token_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(alice));
         let alice_token_z_after_balance = coin::balance<TestUSDC>(signer::address_of(alice));
 
         let output_y = calc_input_using_output(output_z, initial_reserve_yz_y, initial_reserve_yz_z);
@@ -1407,7 +1407,7 @@ module cifarm::swap_test {
         let new_reserve_yz_y = initial_reserve_yz_y + (output_y as u64);
         let new_reserve_yz_z = initial_reserve_yz_z - (output_z as u64);
 
-        let (reserve_xy_y, reserve_xy_x, _) = swap::token_reserves<TestBUSD, TestCAKE>();
+        let (reserve_xy_y, reserve_xy_x, _) = swap::token_reserves<TestBUSD, TestCIFARM>();
         let (reserve_yz_y, reserve_yz_z, _) = swap::token_reserves<TestBUSD, TestUSDC>();
         assert!((alice_token_x_before_balance - alice_token_x_after_balance) == (input_x as u64), 99);
         assert!(alice_token_z_after_balance == output_z, 98);
@@ -1416,12 +1416,12 @@ module cifarm::swap_test {
         assert!(reserve_yz_y == new_reserve_yz_y, 97);
         assert!(reserve_yz_z == new_reserve_yz_z, 96);
 
-        let bob_token_xy_x_before_balance = coin::balance<TestCAKE>(signer::address_of(bob));
+        let bob_token_xy_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(bob));
         let bob_token_xy_y_before_balance = coin::balance<TestBUSD>(signer::address_of(bob));
 
-        router::remove_liquidity<TestCAKE, TestBUSD>(bob, (bob_suppose_xy_lp_balance as u64), 0, 0);
+        router::remove_liquidity<TestCIFARM, TestBUSD>(bob, (bob_suppose_xy_lp_balance as u64), 0, 0);
 
-        let bob_token_xy_x_after_balance = coin::balance<TestCAKE>(signer::address_of(bob));
+        let bob_token_xy_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(bob));
         let bob_token_xy_y_after_balance = coin::balance<TestBUSD>(signer::address_of(bob));
 
         let suppose_xy_k_last = ((initial_reserve_xy_x * initial_reserve_xy_y) as u128);
@@ -1460,10 +1460,10 @@ module cifarm::swap_test {
         assert!((bob_token_yz_y_after_balance - bob_token_yz_y_before_balance) == (bob_remove_liquidity_yz_y as u64), 95);
         assert!((bob_token_yz_z_after_balance - bob_token_yz_z_before_balance) == (bob_remove_liquidity_yz_z as u64), 94);
 
-        swap::withdraw_fee<TestCAKE, TestBUSD>(treasury);
-        let treasury_xy_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(treasury));
-        router::remove_liquidity<TestCAKE, TestBUSD>(treasury, (suppose_xy_fee_amount as u64), 0, 0);
-        let treasury_token_xy_x_after_balance = coin::balance<TestCAKE>(signer::address_of(treasury));
+        swap::withdraw_fee<TestCIFARM, TestBUSD>(treasury);
+        let treasury_xy_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(treasury));
+        router::remove_liquidity<TestCIFARM, TestBUSD>(treasury, (suppose_xy_fee_amount as u64), 0, 0);
+        let treasury_token_xy_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(treasury));
         let treasury_token_xy_y_after_balance = coin::balance<TestBUSD>(signer::address_of(treasury));
 
         let treasury_remove_liquidity_xy_x = ((new_reserve_xy_x) as u128) * suppose_xy_fee_amount / suppose_xy_total_supply;
@@ -1504,11 +1504,11 @@ module cifarm::swap_test {
 
         let coin_owner = test_coins::init_coins();
 
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, bob, 200 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, bob, 200 * pow(10, 8));
         test_coins::register_and_mint<TestBUSD>(&coin_owner, bob, 200 * pow(10, 8));
         test_coins::register_and_mint<TestUSDC>(&coin_owner, bob, 200 * pow(10, 8));
         test_coins::register_and_mint<TestBNB>(&coin_owner, bob, 200 * pow(10, 8));
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, alice, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, alice, 100 * pow(10, 8));
 
         let initial_reserve_xy_x = 5 * pow(10, 8);
         let initial_reserve_xy_y = 10 * pow(10, 8);
@@ -1519,7 +1519,7 @@ module cifarm::swap_test {
         let input_x = 1 * pow(10, 8);
 
         // bob provider liquidity for 1:2 CAKE-BUSD
-        router::add_liquidity<TestCAKE, TestBUSD>(bob, initial_reserve_xy_x, initial_reserve_xy_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(bob, initial_reserve_xy_x, initial_reserve_xy_y, 0, 0);
         let bob_suppose_xy_lp_balance = math::sqrt(((initial_reserve_xy_x as u128) * (initial_reserve_xy_y as u128))) - MINIMUM_LIQUIDITY;
         let suppose_xy_total_supply = bob_suppose_xy_lp_balance + MINIMUM_LIQUIDITY;
         // bob provider liquidity for 2:1 USDC-BUSD
@@ -1531,11 +1531,11 @@ module cifarm::swap_test {
         let bob_suppose_za_lp_balance = math::sqrt(((initial_reserve_za_z as u128) * (initial_reserve_za_a as u128))) - MINIMUM_LIQUIDITY;
         let suppose_za_total_supply = bob_suppose_za_lp_balance + MINIMUM_LIQUIDITY;
 
-        let alice_token_x_before_balance = coin::balance<TestCAKE>(signer::address_of(alice));
+        let alice_token_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(alice));
 
-        router::swap_exact_input_triplehop<TestCAKE, TestBUSD, TestUSDC, TestBNB>(alice, input_x, 0);
+        router::swap_exact_input_triplehop<TestCIFARM, TestBUSD, TestUSDC, TestBNB>(alice, input_x, 0);
 
-        let alice_token_x_after_balance = coin::balance<TestCAKE>(signer::address_of(alice));
+        let alice_token_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(alice));
         let alice_token_a_after_balance = coin::balance<TestBNB>(signer::address_of(alice));
 
         let output_y = calc_output_using_input(input_x, initial_reserve_xy_x, initial_reserve_xy_y);
@@ -1548,7 +1548,7 @@ module cifarm::swap_test {
         let new_reserve_za_z = initial_reserve_za_z + (output_z as u64);
         let new_reserve_za_a = initial_reserve_za_a - (output_a as u64);
 
-        let (reserve_xy_y, reserve_xy_x, _) = swap::token_reserves<TestBUSD, TestCAKE>();
+        let (reserve_xy_y, reserve_xy_x, _) = swap::token_reserves<TestBUSD, TestCIFARM>();
         let (reserve_yz_y, reserve_yz_z, _) = swap::token_reserves<TestBUSD, TestUSDC>();
         let (reserve_za_a, reserve_za_z, _) = swap::token_reserves<TestBNB, TestUSDC>();
         assert!((alice_token_x_before_balance - alice_token_x_after_balance) == input_x, 99);
@@ -1560,12 +1560,12 @@ module cifarm::swap_test {
         assert!(reserve_za_z == new_reserve_za_z, 97);
         assert!(reserve_za_a == new_reserve_za_a, 96);
 
-        let bob_token_xy_x_before_balance = coin::balance<TestCAKE>(signer::address_of(bob));
+        let bob_token_xy_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(bob));
         let bob_token_xy_y_before_balance = coin::balance<TestBUSD>(signer::address_of(bob));
 
-        router::remove_liquidity<TestCAKE, TestBUSD>(bob, (bob_suppose_xy_lp_balance as u64), 0, 0);
+        router::remove_liquidity<TestCIFARM, TestBUSD>(bob, (bob_suppose_xy_lp_balance as u64), 0, 0);
 
-        let bob_token_xy_x_after_balance = coin::balance<TestCAKE>(signer::address_of(bob));
+        let bob_token_xy_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(bob));
         let bob_token_xy_y_after_balance = coin::balance<TestBUSD>(signer::address_of(bob));
 
         let suppose_xy_k_last = ((initial_reserve_xy_x * initial_reserve_xy_y) as u128);
@@ -1626,10 +1626,10 @@ module cifarm::swap_test {
         assert!((bob_token_za_z_after_balance - bob_token_za_z_before_balance) == (bob_remove_liquidity_za_z as u64), 95);
         assert!((bob_token_za_a_after_balance - bob_token_za_a_before_balance) == (bob_remove_liquidity_za_a as u64), 94);
 
-        swap::withdraw_fee<TestCAKE, TestBUSD>(treasury);
-        let treasury_xy_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(treasury));
-        router::remove_liquidity<TestCAKE, TestBUSD>(treasury, (suppose_xy_fee_amount as u64), 0, 0);
-        let treasury_token_xy_x_after_balance = coin::balance<TestCAKE>(signer::address_of(treasury));
+        swap::withdraw_fee<TestCIFARM, TestBUSD>(treasury);
+        let treasury_xy_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(treasury));
+        router::remove_liquidity<TestCIFARM, TestBUSD>(treasury, (suppose_xy_fee_amount as u64), 0, 0);
+        let treasury_token_xy_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(treasury));
         let treasury_token_xy_y_after_balance = coin::balance<TestBUSD>(signer::address_of(treasury));
 
         let treasury_remove_liquidity_xy_x = ((new_reserve_xy_x) as u128) * suppose_xy_fee_amount / suppose_xy_total_supply;
@@ -1683,11 +1683,11 @@ module cifarm::swap_test {
 
         let coin_owner = test_coins::init_coins();
 
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, bob, 200 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, bob, 200 * pow(10, 8));
         test_coins::register_and_mint<TestBUSD>(&coin_owner, bob, 200 * pow(10, 8));
         test_coins::register_and_mint<TestUSDC>(&coin_owner, bob, 200 * pow(10, 8));
         test_coins::register_and_mint<TestBNB>(&coin_owner, bob, 200 * pow(10, 8));
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, alice, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, alice, 100 * pow(10, 8));
 
         let initial_reserve_xy_x = 5 * pow(10, 8);
         let initial_reserve_xy_y = 10 * pow(10, 8);
@@ -1698,7 +1698,7 @@ module cifarm::swap_test {
         let output_a = 298575210;
 
         // bob provider liquidity for 1:2 CAKE-BUSD
-        router::add_liquidity<TestCAKE, TestBUSD>(bob, initial_reserve_xy_x, initial_reserve_xy_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(bob, initial_reserve_xy_x, initial_reserve_xy_y, 0, 0);
         let bob_suppose_xy_lp_balance = math::sqrt(((initial_reserve_xy_x as u128) * (initial_reserve_xy_y as u128))) - MINIMUM_LIQUIDITY;
         let suppose_xy_total_supply = bob_suppose_xy_lp_balance + MINIMUM_LIQUIDITY;
         // bob provider liquidity for 2:1 USDC-BUSD
@@ -1710,11 +1710,11 @@ module cifarm::swap_test {
         let bob_suppose_za_lp_balance = math::sqrt(((initial_reserve_za_z as u128) * (initial_reserve_za_a as u128))) - MINIMUM_LIQUIDITY;
         let suppose_za_total_supply = bob_suppose_za_lp_balance + MINIMUM_LIQUIDITY;
 
-        let alice_token_x_before_balance = coin::balance<TestCAKE>(signer::address_of(alice));
+        let alice_token_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(alice));
 
-        router::swap_exact_output_triplehop<TestCAKE, TestBUSD, TestUSDC, TestBNB>(alice, output_a, 1 * pow(10, 8));
+        router::swap_exact_output_triplehop<TestCIFARM, TestBUSD, TestUSDC, TestBNB>(alice, output_a, 1 * pow(10, 8));
 
-        let alice_token_x_after_balance = coin::balance<TestCAKE>(signer::address_of(alice));
+        let alice_token_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(alice));
         let alice_token_a_after_balance = coin::balance<TestBNB>(signer::address_of(alice));
 
         let output_z = calc_input_using_output(output_a, initial_reserve_za_z, initial_reserve_za_a);
@@ -1727,7 +1727,7 @@ module cifarm::swap_test {
         let new_reserve_za_z = initial_reserve_za_z + (output_z as u64);
         let new_reserve_za_a = initial_reserve_za_a - (output_a as u64);
 
-        let (reserve_xy_y, reserve_xy_x, _) = swap::token_reserves<TestBUSD, TestCAKE>();
+        let (reserve_xy_y, reserve_xy_x, _) = swap::token_reserves<TestBUSD, TestCIFARM>();
         let (reserve_yz_y, reserve_yz_z, _) = swap::token_reserves<TestBUSD, TestUSDC>();
         let (reserve_za_a, reserve_za_z, _) = swap::token_reserves<TestBNB, TestUSDC>();
         assert!((alice_token_x_before_balance - alice_token_x_after_balance) == (input_x as u64), 99);
@@ -1739,12 +1739,12 @@ module cifarm::swap_test {
         assert!(reserve_za_z == new_reserve_za_z, 97);
         assert!(reserve_za_a == new_reserve_za_a, 96);
 
-        let bob_token_xy_x_before_balance = coin::balance<TestCAKE>(signer::address_of(bob));
+        let bob_token_xy_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(bob));
         let bob_token_xy_y_before_balance = coin::balance<TestBUSD>(signer::address_of(bob));
 
-        router::remove_liquidity<TestCAKE, TestBUSD>(bob, (bob_suppose_xy_lp_balance as u64), 0, 0);
+        router::remove_liquidity<TestCIFARM, TestBUSD>(bob, (bob_suppose_xy_lp_balance as u64), 0, 0);
 
-        let bob_token_xy_x_after_balance = coin::balance<TestCAKE>(signer::address_of(bob));
+        let bob_token_xy_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(bob));
         let bob_token_xy_y_after_balance = coin::balance<TestBUSD>(signer::address_of(bob));
 
         let suppose_xy_k_last = ((initial_reserve_xy_x * initial_reserve_xy_y) as u128);
@@ -1805,10 +1805,10 @@ module cifarm::swap_test {
         assert!((bob_token_za_z_after_balance - bob_token_za_z_before_balance) == (bob_remove_liquidity_za_z as u64), 95);
         assert!((bob_token_za_a_after_balance - bob_token_za_a_before_balance) == (bob_remove_liquidity_za_a as u64), 94);
 
-        swap::withdraw_fee<TestCAKE, TestBUSD>(treasury);
-        let treasury_xy_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(treasury));
-        router::remove_liquidity<TestCAKE, TestBUSD>(treasury, (suppose_xy_fee_amount as u64), 0, 0);
-        let treasury_token_xy_x_after_balance = coin::balance<TestCAKE>(signer::address_of(treasury));
+        swap::withdraw_fee<TestCIFARM, TestBUSD>(treasury);
+        let treasury_xy_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(treasury));
+        router::remove_liquidity<TestCIFARM, TestBUSD>(treasury, (suppose_xy_fee_amount as u64), 0, 0);
+        let treasury_token_xy_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(treasury));
         let treasury_token_xy_y_after_balance = coin::balance<TestBUSD>(signer::address_of(treasury));
 
         let treasury_remove_liquidity_xy_x = ((new_reserve_xy_x) as u128) * suppose_xy_fee_amount / suppose_xy_total_supply;
@@ -1869,10 +1869,10 @@ module cifarm::swap_test {
 
         let coin_owner = test_coins::init_coins();
 
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, user1, 200 * pow(10, 8));
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, user2, 200 * pow(10, 8));
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, user3, 200 * pow(10, 8));
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, user4, 200 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, user1, 200 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, user2, 200 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, user3, 200 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, user4, 200 * pow(10, 8));
         test_coins::register_and_mint<TestBUSD>(&coin_owner, user1, 200 * pow(10, 8));
         test_coins::register_and_mint<TestBUSD>(&coin_owner, user2, 200 * pow(10, 8));
         test_coins::register_and_mint<TestBUSD>(&coin_owner, user3, 200 * pow(10, 8));
@@ -1885,7 +1885,7 @@ module cifarm::swap_test {
         test_coins::register_and_mint<TestBNB>(&coin_owner, user2, 200 * pow(10, 8));
         test_coins::register_and_mint<TestBNB>(&coin_owner, user3, 200 * pow(10, 8));
         test_coins::register_and_mint<TestBNB>(&coin_owner, user4, 200 * pow(10, 8));
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, alice, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, alice, 100 * pow(10, 8));
 
         let user1_add_liquidity_xy_x = 5 * pow(10, 8);
         let user2_add_liquidity_xy_x = 20 * pow(10, 8);
@@ -1906,22 +1906,22 @@ module cifarm::swap_test {
         let input_x = 1 * pow(10, 8);
 
         // bob provider liquidity for 1:2 CAKE-BUSD
-        router::add_liquidity<TestCAKE, TestBUSD>(user1, user1_add_liquidity_xy_x, user1_add_liquidity_xy_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(user1, user1_add_liquidity_xy_x, user1_add_liquidity_xy_y, 0, 0);
         let user1_suppose_xy_lp_balance = math::sqrt(((user1_add_liquidity_xy_x as u128) * (user1_add_liquidity_xy_y as u128))) - MINIMUM_LIQUIDITY;
         let suppose_xy_total_supply = user1_suppose_xy_lp_balance + MINIMUM_LIQUIDITY;
         let suppose_reserve_xy_x = user1_add_liquidity_xy_x;
         let suppose_reserve_xy_y = user1_add_liquidity_xy_y;
-        router::add_liquidity<TestCAKE, TestBUSD>(user2, user2_add_liquidity_xy_x, user2_add_liquidity_xy_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(user2, user2_add_liquidity_xy_x, user2_add_liquidity_xy_y, 0, 0);
         let user2_suppose_xy_lp_balance = math::min((user2_add_liquidity_xy_x as u128) * suppose_xy_total_supply / (suppose_reserve_xy_x as u128), (user2_add_liquidity_xy_y as u128) * suppose_xy_total_supply / (suppose_reserve_xy_y as u128));
         suppose_xy_total_supply = suppose_xy_total_supply + user2_suppose_xy_lp_balance;
         suppose_reserve_xy_x = suppose_reserve_xy_x + user2_add_liquidity_xy_x;
         suppose_reserve_xy_y = suppose_reserve_xy_y + user2_add_liquidity_xy_y;
-        router::add_liquidity<TestCAKE, TestBUSD>(user3, user3_add_liquidity_xy_x, user3_add_liquidity_xy_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(user3, user3_add_liquidity_xy_x, user3_add_liquidity_xy_y, 0, 0);
         let user3_suppose_xy_lp_balance = math::min((user3_add_liquidity_xy_x as u128) * suppose_xy_total_supply / (suppose_reserve_xy_x as u128), (user3_add_liquidity_xy_y as u128) * suppose_xy_total_supply / (suppose_reserve_xy_y as u128));
         suppose_xy_total_supply = suppose_xy_total_supply + user3_suppose_xy_lp_balance;
         suppose_reserve_xy_x = suppose_reserve_xy_x + user3_add_liquidity_xy_x;
         suppose_reserve_xy_y = suppose_reserve_xy_y + user3_add_liquidity_xy_y;
-        router::add_liquidity<TestCAKE, TestBUSD>(user4, user4_add_liquidity_xy_x, user4_add_liquidity_xy_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(user4, user4_add_liquidity_xy_x, user4_add_liquidity_xy_y, 0, 0);
         let user4_suppose_xy_lp_balance = math::min((user4_add_liquidity_xy_x as u128) * suppose_xy_total_supply / (suppose_reserve_xy_x as u128), (user4_add_liquidity_xy_y as u128) * suppose_xy_total_supply / (suppose_reserve_xy_y as u128));
         suppose_xy_total_supply = suppose_xy_total_supply + user4_suppose_xy_lp_balance;
         suppose_reserve_xy_x = suppose_reserve_xy_x + user4_add_liquidity_xy_x;
@@ -1942,11 +1942,11 @@ module cifarm::swap_test {
         suppose_reserve_za_z = suppose_reserve_za_z + user2_add_liquidity_za_z;
         suppose_reserve_za_a = suppose_reserve_za_a + user2_add_liquidity_za_a;
 
-        let alice_token_x_before_balance = coin::balance<TestCAKE>(signer::address_of(alice));
+        let alice_token_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(alice));
 
-        router::swap_exact_input_triplehop<TestCAKE, TestBUSD, TestUSDC, TestBNB>(alice, input_x, 0);
+        router::swap_exact_input_triplehop<TestCIFARM, TestBUSD, TestUSDC, TestBNB>(alice, input_x, 0);
 
-        let alice_token_x_after_balance = coin::balance<TestCAKE>(signer::address_of(alice));
+        let alice_token_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(alice));
         let alice_token_a_after_balance = coin::balance<TestBNB>(signer::address_of(alice));
 
         let output_y = calc_output_using_input(input_x, suppose_reserve_xy_x, suppose_reserve_xy_y);
@@ -1959,7 +1959,7 @@ module cifarm::swap_test {
         let first_swap_suppose_reserve_za_z = suppose_reserve_za_z + (output_z as u64);
         let first_swap_suppose_reserve_za_a = suppose_reserve_za_a - (output_a as u64);
 
-        let (reserve_xy_y, reserve_xy_x, _) = swap::token_reserves<TestBUSD, TestCAKE>();
+        let (reserve_xy_y, reserve_xy_x, _) = swap::token_reserves<TestBUSD, TestCIFARM>();
         let (reserve_yz_y, reserve_yz_z, _) = swap::token_reserves<TestBUSD, TestUSDC>();
         let (reserve_za_a, reserve_za_z, _) = swap::token_reserves<TestBNB, TestUSDC>();
         assert!((alice_token_x_before_balance - alice_token_x_after_balance) == input_x, 99);
@@ -1971,12 +1971,12 @@ module cifarm::swap_test {
         assert!(reserve_za_z == first_swap_suppose_reserve_za_z, 97);
         assert!(reserve_za_a == first_swap_suppose_reserve_za_a, 96);
 
-        alice_token_x_before_balance = coin::balance<TestCAKE>(signer::address_of(alice));
+        alice_token_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(alice));
         let alice_token_a_before_balance = coin::balance<TestBNB>(signer::address_of(alice));
 
-        router::swap_exact_input_triplehop<TestCAKE, TestBUSD, TestUSDC, TestBNB>(alice, input_x, 0);
+        router::swap_exact_input_triplehop<TestCIFARM, TestBUSD, TestUSDC, TestBNB>(alice, input_x, 0);
 
-        alice_token_x_after_balance = coin::balance<TestCAKE>(signer::address_of(alice));
+        alice_token_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(alice));
         alice_token_a_after_balance = coin::balance<TestBNB>(signer::address_of(alice));
 
         output_y = calc_output_using_input(input_x, first_swap_suppose_reserve_xy_x, first_swap_suppose_reserve_xy_y);
@@ -1989,7 +1989,7 @@ module cifarm::swap_test {
         let second_swap_suppose_reserve_za_z = first_swap_suppose_reserve_za_z + (output_z as u64);
         let second_swap_suppose_reserve_za_a = first_swap_suppose_reserve_za_a - (output_a as u64);
 
-        (reserve_xy_y, reserve_xy_x, _) = swap::token_reserves<TestBUSD, TestCAKE>();
+        (reserve_xy_y, reserve_xy_x, _) = swap::token_reserves<TestBUSD, TestCIFARM>();
         (reserve_yz_y, reserve_yz_z, _) = swap::token_reserves<TestBUSD, TestUSDC>();
         (reserve_za_a, reserve_za_z, _) = swap::token_reserves<TestBNB, TestUSDC>();
         assert!((alice_token_x_before_balance - alice_token_x_after_balance) == input_x, 99);
@@ -2001,12 +2001,12 @@ module cifarm::swap_test {
         assert!(reserve_za_z == second_swap_suppose_reserve_za_z, 97);
         assert!(reserve_za_a == second_swap_suppose_reserve_za_a, 96);
 
-        let user1_token_xy_x_before_balance = coin::balance<TestCAKE>(signer::address_of(user1));
+        let user1_token_xy_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(user1));
         let user1_token_xy_y_before_balance = coin::balance<TestBUSD>(signer::address_of(user1));
 
-        router::remove_liquidity<TestCAKE, TestBUSD>(user1, (user1_suppose_xy_lp_balance as u64), 0, 0);
+        router::remove_liquidity<TestCIFARM, TestBUSD>(user1, (user1_suppose_xy_lp_balance as u64), 0, 0);
 
-        let user1_token_xy_x_after_balance = coin::balance<TestCAKE>(signer::address_of(user1));
+        let user1_token_xy_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(user1));
         let user1_token_xy_y_after_balance = coin::balance<TestBUSD>(signer::address_of(user1));
 
         let suppose_xy_k_last = (suppose_reserve_xy_x as u128) * (suppose_reserve_xy_y as u128);
@@ -2026,12 +2026,12 @@ module cifarm::swap_test {
         assert!((user1_token_xy_x_after_balance - user1_token_xy_x_before_balance) == (user1_remove_liquidity_xy_x as u64), 95);
         assert!((user1_token_xy_y_after_balance - user1_token_xy_y_before_balance) == (user1_remove_liquidity_xy_y as u64), 94);
 
-        let user2_token_xy_x_before_balance = coin::balance<TestCAKE>(signer::address_of(user2));
+        let user2_token_xy_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(user2));
         let user2_token_xy_y_before_balance = coin::balance<TestBUSD>(signer::address_of(user2));
 
-        router::remove_liquidity<TestCAKE, TestBUSD>(user2, (user2_suppose_xy_lp_balance as u64), 0, 0);
+        router::remove_liquidity<TestCIFARM, TestBUSD>(user2, (user2_suppose_xy_lp_balance as u64), 0, 0);
 
-        let user2_token_xy_x_after_balance = coin::balance<TestCAKE>(signer::address_of(user2));
+        let user2_token_xy_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(user2));
         let user2_token_xy_y_after_balance = coin::balance<TestBUSD>(signer::address_of(user2));
 
         // the k is the same with no new fee
@@ -2046,11 +2046,11 @@ module cifarm::swap_test {
 
         let suppose_xy_fee_amount = first_swap_suppose_xy_fee_amount + second_swap_suppose_xy_fee_amount;
 
-        swap::withdraw_fee<TestCAKE, TestBUSD>(treasury);
-        let treasury_xy_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCAKE>>(signer::address_of(treasury));
-        router::remove_liquidity<TestCAKE, TestBUSD>(treasury, (suppose_xy_fee_amount as u64), 0, 0);
+        swap::withdraw_fee<TestCIFARM, TestBUSD>(treasury);
+        let treasury_xy_lp_after_balance = coin::balance<LPToken<TestBUSD, TestCIFARM>>(signer::address_of(treasury));
+        router::remove_liquidity<TestCIFARM, TestBUSD>(treasury, (suppose_xy_fee_amount as u64), 0, 0);
 
-        let treasury_token_xy_x_after_balance = coin::balance<TestCAKE>(signer::address_of(treasury));
+        let treasury_token_xy_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(treasury));
         let treasury_token_xy_y_after_balance = coin::balance<TestBUSD>(signer::address_of(treasury));
 
         let treasury_remove_liquidity_xy_x = ((new_reserve_xy_x) as u128) * suppose_xy_fee_amount / suppose_xy_total_supply;
@@ -2064,12 +2064,12 @@ module cifarm::swap_test {
         assert!(treasury_token_xy_x_after_balance == (treasury_remove_liquidity_xy_x as u64), 92);
         assert!(treasury_token_xy_y_after_balance == (treasury_remove_liquidity_xy_y as u64), 91);
 
-        let user3_token_xy_x_before_balance = coin::balance<TestCAKE>(signer::address_of(user3));
+        let user3_token_xy_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(user3));
         let user3_token_xy_y_before_balance = coin::balance<TestBUSD>(signer::address_of(user3));
 
-        router::remove_liquidity<TestCAKE, TestBUSD>(user3, (user3_suppose_xy_lp_balance as u64), 0, 0);
+        router::remove_liquidity<TestCIFARM, TestBUSD>(user3, (user3_suppose_xy_lp_balance as u64), 0, 0);
 
-        let user3_token_xy_x_after_balance = coin::balance<TestCAKE>(signer::address_of(user3));
+        let user3_token_xy_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(user3));
         let user3_token_xy_y_after_balance = coin::balance<TestBUSD>(signer::address_of(user3));
 
         let user3_remove_liquidity_xy_x = ((new_reserve_xy_x) as u128) * user3_suppose_xy_lp_balance / suppose_xy_total_supply;
@@ -2081,12 +2081,12 @@ module cifarm::swap_test {
         assert!((user3_token_xy_x_after_balance - user3_token_xy_x_before_balance) == (user3_remove_liquidity_xy_x as u64), 95);
         assert!((user3_token_xy_y_after_balance - user3_token_xy_y_before_balance) == (user3_remove_liquidity_xy_y as u64), 94);
 
-        let user4_token_xy_x_before_balance = coin::balance<TestCAKE>(signer::address_of(user4));
+        let user4_token_xy_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(user4));
         let user4_token_xy_y_before_balance = coin::balance<TestBUSD>(signer::address_of(user4));
 
-        router::remove_liquidity<TestCAKE, TestBUSD>(user4, (user4_suppose_xy_lp_balance as u64), 0, 0);
+        router::remove_liquidity<TestCIFARM, TestBUSD>(user4, (user4_suppose_xy_lp_balance as u64), 0, 0);
 
-        let user4_token_xy_x_after_balance = coin::balance<TestCAKE>(signer::address_of(user4));
+        let user4_token_xy_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(user4));
         let user4_token_xy_y_after_balance = coin::balance<TestBUSD>(signer::address_of(user4));
 
         let user4_remove_liquidity_xy_x = ((new_reserve_xy_x) as u128) * user4_suppose_xy_lp_balance / suppose_xy_total_supply;
@@ -2095,7 +2095,7 @@ module cifarm::swap_test {
         assert!((user4_token_xy_x_after_balance - user4_token_xy_x_before_balance) == (user4_remove_liquidity_xy_x as u64), 95);
         assert!((user4_token_xy_y_after_balance - user4_token_xy_y_before_balance) == (user4_remove_liquidity_xy_y as u64), 94);
 
-        swap::withdraw_fee<TestCAKE, TestBUSD>(treasury);
+        swap::withdraw_fee<TestCIFARM, TestBUSD>(treasury);
     }
 
     #[test(dev = @dev, admin = @default_admin, resource_account = @cifarm, treasury = @0x23456, bob = @0x12345, alice = @0x12346, aptos_framework = @0x1)]
@@ -2116,12 +2116,12 @@ module cifarm::swap_test {
 
         let coin_owner = test_coins::init_coins();
 
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, bob, 200 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, bob, 200 * pow(10, 8));
         test_coins::register_and_mint<TestBUSD>(&coin_owner, bob, 200 * pow(10, 8));
         test_coins::register_and_mint<TestUSDC>(&coin_owner, bob, 200 * pow(10, 8));
         test_coins::register_and_mint<TestBNB>(&coin_owner, bob, 200 * pow(10, 8));
         test_coins::register_and_mint<TestAPT>(&coin_owner, bob, 200 * pow(10, 8));
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, alice, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, alice, 100 * pow(10, 8));
 
         let initial_reserve_xy_x = 5 * pow(10, 8);
         let initial_reserve_xy_y = 10 * pow(10, 8);
@@ -2133,7 +2133,7 @@ module cifarm::swap_test {
         let initial_reserve_ab_b = 15 * pow(10, 8);
         let input_x = 1 * pow(10, 8);
 
-        router::add_liquidity<TestCAKE, TestBUSD>(bob, initial_reserve_xy_x, initial_reserve_xy_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(bob, initial_reserve_xy_x, initial_reserve_xy_y, 0, 0);
 
         router::add_liquidity<TestBUSD, TestUSDC>(bob, initial_reserve_yz_y, initial_reserve_yz_z, 0, 0);
     
@@ -2141,11 +2141,11 @@ module cifarm::swap_test {
         
         router::add_liquidity<TestBNB, TestAPT>(bob, initial_reserve_ab_a, initial_reserve_ab_b, 0, 0);
 
-        let alice_token_x_before_balance = coin::balance<TestCAKE>(signer::address_of(alice));
+        let alice_token_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(alice));
 
-        router::swap_exact_input_quadruplehop<TestCAKE, TestBUSD, TestUSDC, TestBNB, TestAPT>(alice, input_x, 0);
+        router::swap_exact_input_quadruplehop<TestCIFARM, TestBUSD, TestUSDC, TestBNB, TestAPT>(alice, input_x, 0);
 
-        let alice_token_x_after_balance = coin::balance<TestCAKE>(signer::address_of(alice));
+        let alice_token_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(alice));
         let alice_token_b_after_balance = coin::balance<TestAPT>(signer::address_of(alice));
 
         let output_y = swap_utils::get_amount_out(input_x, initial_reserve_xy_x, initial_reserve_xy_y);
@@ -2162,7 +2162,7 @@ module cifarm::swap_test {
         let new_reserve_ab_a = initial_reserve_ab_a + (output_a as u64);
         let new_reserve_ab_b = initial_reserve_ab_b - (output_b as u64);
 
-        let (reserve_xy_x, reserve_xy_y) = get_token_reserves<TestCAKE, TestBUSD>();
+        let (reserve_xy_x, reserve_xy_y) = get_token_reserves<TestCIFARM, TestBUSD>();
         let (reserve_yz_y, reserve_yz_z) = get_token_reserves<TestBUSD, TestUSDC>();
         let (reserve_za_z, reserve_za_a) = get_token_reserves<TestUSDC, TestBNB>();
         let (reserve_ab_a, reserve_ab_b) = get_token_reserves<TestBNB, TestAPT>();
@@ -2198,12 +2198,12 @@ module cifarm::swap_test {
 
         let coin_owner = test_coins::init_coins();
 
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, bob, 200 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, bob, 200 * pow(10, 8));
         test_coins::register_and_mint<TestBUSD>(&coin_owner, bob, 200 * pow(10, 8));
         test_coins::register_and_mint<TestUSDC>(&coin_owner, bob, 200 * pow(10, 8));
         test_coins::register_and_mint<TestBNB>(&coin_owner, bob, 200 * pow(10, 8));
         test_coins::register_and_mint<TestAPT>(&coin_owner, bob, 200 * pow(10, 8));
-        test_coins::register_and_mint<TestCAKE>(&coin_owner, alice, 100 * pow(10, 8));
+        test_coins::register_and_mint<TestCIFARM>(&coin_owner, alice, 100 * pow(10, 8));
 
         let initial_reserve_xy_x = 5 * pow(10, 8);
         let initial_reserve_xy_y = 10 * pow(10, 8);
@@ -2215,7 +2215,7 @@ module cifarm::swap_test {
         let initial_reserve_ab_b = 15 * pow(10, 8);
         let output_b = 8888888;
 
-        router::add_liquidity<TestCAKE, TestBUSD>(bob, initial_reserve_xy_x, initial_reserve_xy_y, 0, 0);
+        router::add_liquidity<TestCIFARM, TestBUSD>(bob, initial_reserve_xy_x, initial_reserve_xy_y, 0, 0);
 
         router::add_liquidity<TestBUSD, TestUSDC>(bob, initial_reserve_yz_y, initial_reserve_yz_z, 0, 0);
     
@@ -2223,11 +2223,11 @@ module cifarm::swap_test {
         
         router::add_liquidity<TestBNB, TestAPT>(bob, initial_reserve_ab_a, initial_reserve_ab_b, 0, 0);
 
-        let alice_token_x_before_balance = coin::balance<TestCAKE>(signer::address_of(alice));
+        let alice_token_x_before_balance = coin::balance<TestCIFARM>(signer::address_of(alice));
 
-        router::swap_exact_output_quadruplehop<TestCAKE, TestBUSD, TestUSDC, TestBNB, TestAPT>(alice, output_b, 100 * pow(10, 8));
+        router::swap_exact_output_quadruplehop<TestCIFARM, TestBUSD, TestUSDC, TestBNB, TestAPT>(alice, output_b, 100 * pow(10, 8));
 
-        let alice_token_x_after_balance = coin::balance<TestCAKE>(signer::address_of(alice));
+        let alice_token_x_after_balance = coin::balance<TestCIFARM>(signer::address_of(alice));
         let alice_token_b_after_balance = coin::balance<TestAPT>(signer::address_of(alice));
 
         let output_a = swap_utils::get_amount_in(output_b, initial_reserve_ab_a, initial_reserve_ab_b);
@@ -2244,7 +2244,7 @@ module cifarm::swap_test {
         let new_reserve_ab_a = initial_reserve_ab_a + (output_a as u64);
         let new_reserve_ab_b = initial_reserve_ab_b - (output_b as u64);
 
-        let (reserve_xy_x, reserve_xy_y) = get_token_reserves<TestCAKE, TestBUSD>();
+        let (reserve_xy_x, reserve_xy_y) = get_token_reserves<TestCIFARM, TestBUSD>();
         let (reserve_yz_y, reserve_yz_z) = get_token_reserves<TestBUSD, TestUSDC>();
         let (reserve_za_z, reserve_za_a) = get_token_reserves<TestUSDC, TestBNB>();
         let (reserve_ab_a, reserve_ab_b) = get_token_reserves<TestBNB, TestAPT>();
