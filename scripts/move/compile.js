@@ -8,7 +8,9 @@ async function compile() {
     packageDirectoryPath: "contract",
     namedAddresses: {
       // Compile module with account address
-      message_board_addr: process.env.NEXT_MODULE_PUBLISHER_ACCOUNT_ADDRESS,
+      cifarm: process.env.NEXT_MODULE_CIFARM_ACCOUNT_ADDRESS,
+      dev: process.env.NEXT_MODULE_DEV_ACCOUNT_ADDRESS,
+      default_admin: process.env.NEXT_MODULE_DEFAULT_ADMIN_ACCOUNT_ADDRESS,
     },
   });
 }

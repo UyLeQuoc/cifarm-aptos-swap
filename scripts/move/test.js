@@ -8,7 +8,11 @@ async function test() {
   await move.test({
     packageDirectoryPath: "contract",
     namedAddresses: {
-      message_board_addr: "0x100",
+      test_coin: "0x16",
+      zero: "0000000000000000000000000000000000000000000000000000000000000000",
+      cifarm: process.env.NEXT_MODULE_CIFARM_ACCOUNT_ADDRESS,
+      dev: process.env.NEXT_MODULE_DEV_ACCOUNT_ADDRESS,
+      default_admin: process.env.NEXT_MODULE_DEFAULT_ADMIN_ACCOUNT_ADDRESS,
     },
   });
 }

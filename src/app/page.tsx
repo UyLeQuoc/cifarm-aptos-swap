@@ -2,7 +2,6 @@
 
 import { AccountInfo } from "@/components/AccountInfo";
 import { Header } from "@/components/Header";
-import { MessageBoard } from "@/components/MessageBoard";
 import { NetworkInfo } from "@/components/NetworkInfo";
 import { TransferAPT } from "@/components/TransferAPT";
 import { WalletDetails } from "@/components/WalletDetails";
@@ -24,7 +23,6 @@ function App() {
               <NetworkInfo />
               <AccountInfo />
               <TransferAPT />
-              <MessageBoard />
             </CardContent>
           </Card>
         ) : (
